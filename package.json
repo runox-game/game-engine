@@ -1,11 +1,12 @@
 {
-  "name": "runox-game-engine",
+  "name": "@runox-game/game-engine",
   "version": "0.0.1",
   "description": "",
   "main": "game-engine.js",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "publish:patch": "tsc -p ./tsconfig.json && npm version patch && npm publish --access public"
   },
   "author": "",
   "license": "ISC",
