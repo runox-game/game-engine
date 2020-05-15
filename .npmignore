@@ -1,0 +1,11 @@
+test/
+src/
+docs/
+coverage/
+
+.babelrc
+.prettierrc
+jest.config.js
+tsconfig.json
+tslint.json
+webpack.config.js
