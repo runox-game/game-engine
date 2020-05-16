@@ -1,11 +1,11 @@
-test/
+tests/
 src/
 docs/
 coverage/
+.github/
 
-.babelrc
+.gitignore
 .prettierrc
 jest.config.js
 tsconfig.json
 tslint.json
-webpack.config.js
