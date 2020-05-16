@@ -1,11 +1,18 @@
-import { Hand } from './hand.model';
+import { Hand, IHand } from './hand.model';
 
-export class Player {
+export interface IPlayer {
+  readonly id: string;
+  readonly name: string;
+  readonly pic: string;
+  readonly hand: IHand;
+}
+
+export class Player implements IPlayer {
   readonly id: string;
   readonly name: string;
   readonly pic: string;
 
-  readonly hand: Hand;
+  readonly hand: IHand;
 
   constructor(id: string, name: string, pic: string) {
     this.id = id;
@@ -13,22 +20,5 @@ export class Player {
     this.pic = pic;
 
     this.hand = new Hand();
-  }
-
-  parseObjects(array: any[]) {
-    return array.map((element) => {
-      return element.parseObject();
-    });
-  }
-
-  parseObject() {
-    return {
-      id: this.id,
-      name: this.name,
-      pic: this.pic,
-      hand: {
-        cards: this.parseObjects(this.hand.cards),
-      },
-    };
   }
 }

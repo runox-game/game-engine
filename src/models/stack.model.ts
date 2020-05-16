@@ -1,7 +1,16 @@
-import { Card } from './card.model';
+import { Card, ICard } from './card.model';
 
-export class Stack {
-  cards: Card[];
+export interface IStack {
+  cards: ICard[];
+
+  readonly cardOnTop?: ICard;
+
+  addCard(card: ICard): void;
+  empty(): void;
+}
+
+export class Stack implements IStack {
+  cards: ICard[];
 
   constructor() {
     this.cards = [];
@@ -15,7 +24,7 @@ export class Stack {
     return this.cards[0];
   }
 
-  addCard(card: Card | undefined) {
+  addCard(card: ICard) {
     if (!card) {
       throw new Error(
         'La carta ha llegado nula al intentar agregarla al stack',

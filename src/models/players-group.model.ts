@@ -1,17 +1,25 @@
-import { Player } from './player.model';
+import { IPlayer } from './player.model';
 
-export class PlayersGroup {
-  players: Player[];
+export interface IPlayersGroup {
+  players: IPlayer[];
+
+  addPlayer(player: IPlayer): void;
+  addPlayers(players: IPlayer[]): void;
+  getPlayerById(playerId: string): IPlayer;
+}
+
+export class PlayersGroup implements IPlayersGroup {
+  players: IPlayer[];
 
   constructor() {
     this.players = [];
   }
 
-  addPlayer(player: Player) {
+  addPlayer(player: IPlayer) {
     this.players.push(player);
   }
 
-  addPlayers(players: Player[]) {
+  addPlayers(players: IPlayer[]) {
     this.players.push(...players);
   }
 

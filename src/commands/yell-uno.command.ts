@@ -1,6 +1,6 @@
 import { GameCommand } from './game.command';
-import { Player } from '../models/player.model';
-import { GameState } from '../models/game-state.model';
+import { IPlayer } from '../models/player.model';
+import { IGameState } from '../models/game-state.model';
 import { CommandValidation } from './command-result';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 import { AfterYellUnoEvent } from '../events/after-yell-uno.event';
@@ -22,17 +22,15 @@ export class YellUnoCommand extends GameCommand {
     this.yellerId = yellerId;
   }
 
-  execute(state: GameState) {
+  execute(state: IGameState) {
     const yeller = this.yellerId
       ? state.playersGroup.getPlayerById(this.yellerId)
-      : (state.turn.player as Player);
+      : (state.turn.player as IPlayer);
 
     // es posible que el jugador tenga 2 cartas al momento de gritar UNO!
     if (yeller.hand.cards.length <= 2 && !state.unoYellers[yeller.id]) {
       // si no grito antes entonces lo marca como que grito
       state.unoYellers[yeller.id] = true;
-
-      console.log(`El jugador ${yeller.name} ha gritado UNO!`);
 
       this.events.dispatchAfterYellUno(new AfterYellUnoEvent(yeller));
     } else {
@@ -49,7 +47,7 @@ export class YellUnoCommand extends GameCommand {
     }
   }
 
-  validate(state: GameState) {
+  validate(state: IGameState) {
     return new CommandValidation(true);
   }
 }

@@ -1,6 +1,6 @@
 import { GameCommand } from './game.command';
-import { Player } from '../models/player.model';
-import { GameState } from '../models/game-state.model';
+import { IPlayer } from '../models/player.model';
+import { IGameState } from '../models/game-state.model';
 import { CommandValidation } from './command-result';
 
 /**
@@ -10,26 +10,24 @@ export class AddPlayersCommand extends GameCommand {
   /**
    * Players to add into the game
    */
-  private readonly players: Player[];
+  private readonly players: IPlayer[];
 
   /**
    * Class that allows adding players to the game state
    *
    * @param players - players to add into the game
    */
-  constructor(players: Player[]) {
+  constructor(players: IPlayer[]) {
     super();
 
     this.players = players;
   }
 
-  execute(state: GameState) {
+  execute(state: IGameState) {
     state.playersGroup.addPlayers(this.players);
-
-    console.log(`Se ha agregado a ${this.players.length} jugadores`);
   }
 
-  validate(state: GameState) {
+  validate(state: IGameState) {
     if (!this.players || !this.players.length) {
       return new CommandValidation(
         false,

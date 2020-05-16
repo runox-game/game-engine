@@ -1,13 +1,21 @@
-import { Card } from './card.model';
+import { ICard } from './card.model';
 
-export class Deck {
-  cards: Card[];
+export interface IDeck {
+  cards: ICard[];
+
+  addCards(cards: ICard[]): void;
+  shuffle(): void;
+  takeCard(): ICard;
+}
+
+export class Deck implements IDeck {
+  cards: ICard[];
 
   constructor() {
     this.cards = [];
   }
 
-  addCards(cards: Card[]) {
+  addCards(cards: ICard[]) {
     this.cards.push(...cards);
   }
 
@@ -34,6 +42,12 @@ export class Deck {
       throw new Error('No hay cartas disponibles en el mazo');
     }
 
-    return this.cards.shift();
+    const card = this.cards.shift();
+
+    if (!card) {
+      throw new Error('No ha sido posible tomar cartas del mazo');
+    }
+
+    return card;
   }
 }

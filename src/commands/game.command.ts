@@ -1,4 +1,4 @@
-import { GameState } from '../models/game-state.model';
+import { IGameState } from '../models/game-state.model';
 import { CommandValidation } from './command-result';
 import { GameEvents } from '../events/game-events';
 
@@ -23,7 +23,7 @@ export abstract class GameCommand {
    * @param state - Current game state
    * @returns void
    */
-  abstract execute(state: GameState): void;
+  abstract execute(state: IGameState): void;
 
   /**
    * Validates that the state is in optimal conditions to be able to execute the command
@@ -34,5 +34,5 @@ export abstract class GameCommand {
    * @param state - Current game state
    * @returns object with validation result
    */
-  abstract validate(state: GameState): CommandValidation;
+  abstract validate(state: IGameState): CommandValidation;
 }

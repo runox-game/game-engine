@@ -2,10 +2,25 @@ import { generateUniqueId } from '../utils/id-generator.helper';
 import { Color } from './color.model';
 import { Value, isSpecial } from './values.model';
 
-export class Card {
+export interface ICard {
   readonly id: string;
   readonly sprite: string;
   readonly value: Value;
+  color?: Color;
+
+  readonly score: number;
+
+  isSpecialCard(): boolean;
+  hasEffects(): boolean;
+  setColor(color: Color): void;
+  isPlayable(otherCard: Card): boolean;
+}
+
+export class Card implements ICard {
+  readonly id: string;
+  readonly sprite: string;
+  readonly value: Value;
+
   color?: Color;
 
   constructor(value: Value, color?: Color, id?: string) {
@@ -82,14 +97,5 @@ export class Card {
     }
 
     return otherCard.value === this.value || otherCard.color === this.color;
-  }
-
-  parseObject() {
-    return {
-      id: this.id,
-      sprite: this.sprite,
-      value: this.value,
-      color: this.color,
-    };
   }
 }

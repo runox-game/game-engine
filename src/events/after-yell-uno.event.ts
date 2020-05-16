@@ -1,4 +1,4 @@
-import { Player } from '../models/player.model';
+import { IPlayer } from '../models/player.model';
 
 /**
  * Event that fires after a player yells one
@@ -9,5 +9,5 @@ export class AfterYellUnoEvent {
    *
    * @param yeller - player who yelled one
    */
-  constructor(public readonly yeller: Player) {}
+  constructor(public readonly yeller: IPlayer) {}
 }

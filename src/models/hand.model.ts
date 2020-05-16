@@ -1,9 +1,20 @@
-import { Card } from './card.model';
+import { ICard } from './card.model';
 import { Value } from './values.model';
 import { Color } from './color.model';
 
-export class Hand {
-  cards: Card[];
+export interface IHand {
+  cards: ICard[];
+
+  readonly score: number;
+
+  addCard(card: ICard): void;
+  addCards(cards: ICard[]): void;
+  removeCard(card: ICard): void;
+  hasCard(value: Value, color?: Color): boolean;
+}
+
+export class Hand implements IHand {
+  cards: ICard[];
 
   constructor() {
     this.cards = [];
@@ -17,16 +28,16 @@ export class Hand {
     }, 0);
   }
 
-  addCard(card: Card) {
+  addCard(card: ICard) {
     this.cards.push(card);
   }
 
-  addCards(cards: Card[]) {
+  addCards(cards: ICard[]) {
     this.cards.push(...cards);
   }
 
-  removeCard(card: Card | undefined) {
-    if (card === undefined) {
+  removeCard(card: ICard) {
+    if (!card) {
       throw new Error(`La mano del jugador no posee cartas`);
     }
 
@@ -39,8 +50,6 @@ export class Hand {
     }
 
     this.cards.splice(cardIndex, 1);
-
-    console.log(`Se ha descartado la carta: ${card.id}`);
   }
 
   hasCard(value: Value, color?: Color) {

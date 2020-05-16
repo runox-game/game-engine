@@ -1,5 +1,5 @@
 import { GameCommand } from './game.command';
-import { GameState } from '../models/game-state.model';
+import { IGameState } from '../models/game-state.model';
 import { Card } from '../models/card.model';
 import { COLORS } from '../models/color.model';
 import { Value, VALUES } from '../models/values.model';
@@ -16,7 +16,7 @@ export class BuildDeckCommand extends GameCommand {
     super();
   }
 
-  execute(state: GameState) {
+  execute(state: IGameState) {
     /*
       Traditional deck contains:
       - +4 x2
@@ -42,11 +42,9 @@ export class BuildDeckCommand extends GameCommand {
     });
 
     state.deck.shuffle();
-
-    console.log('Se ha creado el deck');
   }
 
-  validate(state: GameState) {
+  validate(state: IGameState) {
     return new CommandValidation(true);
   }
 }

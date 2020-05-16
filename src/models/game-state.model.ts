@@ -1,19 +1,40 @@
-import { Deck } from './deck.model';
-import { PlayersGroup } from './players-group.model';
-import { Turn } from './turn.model';
-import { Stack } from './stack.model';
+import { Deck, IDeck } from './deck.model';
+import { PlayersGroup, IPlayersGroup } from './players-group.model';
+import { Turn, ITurn } from './turn.model';
+import { Stack, IStack } from './stack.model';
 import { GameDirection } from './game-direction.model';
-import { Card } from './card.model';
-import { Player } from './player.model';
+import { Card, ICard } from './card.model';
+import { Player, IPlayer } from './player.model';
 import { GameEvents } from '../events/game-events';
 import { Value } from './values.model';
 import { GameModes } from './game-modes';
+import { Color } from './color.model';
+
+export interface IGameState {
+  id: number;
+  readonly deck: IDeck;
+  readonly stack: IStack;
+  readonly playersGroup: IPlayersGroup;
+  readonly turn: ITurn;
+  readonly events: GameEvents;
+  unoYellers: { [id: string]: boolean };
+  gameDirection: number;
+  cardsToGive: number;
+  gameModes: GameModes;
+
+  readonly nextPlayerToPlay: IPlayer;
+
+  changeDirection(): void;
+  giveCards(quantity: number, toPlayer: IPlayer): ICard[];
+  addStackCardsToDeck(): void;
+  overrideInternalState(state: IGameState): void;
+}
 
 /** Clase que representa el estado del juego */
-export class GameState {
-  readonly deck: Deck;
-  readonly stack: Stack;
-  readonly playersGroup: PlayersGroup;
+export class GameState implements IGameState {
+  readonly deck: IDeck;
+  readonly stack: IStack;
+  readonly playersGroup: IPlayersGroup;
   readonly turn: Turn;
   readonly events: GameEvents;
 
@@ -71,7 +92,7 @@ export class GameState {
     this.playersGroup.players.reverse();
   }
 
-  giveCards(quantity: number, toPlayer: Player) {
+  giveCards(quantity: number, toPlayer: IPlayer) {
     // numero de cartas disponibles entre mazo y pila
     const availableCards =
       this.deck.cards.length + (this.stack.cards.length - 1);
@@ -84,15 +105,13 @@ export class GameState {
       this.addStackCardsToDeck();
     }
 
-    let newCards: Card[] = [];
+    let newCards: ICard[] = [];
 
     for (let index = 0; index < quantity; index++) {
       newCards = [...newCards, this.deck.takeCard() as Card];
     }
 
     toPlayer.hand.addCards(newCards);
-
-    console.log(`Se entregaron ${quantity} cartas al jugador ${toPlayer.name}`);
 
     return newCards;
   }
@@ -117,82 +136,46 @@ export class GameState {
     this.deck.shuffle();
   }
 
-  parseObjects(array: any[]) {
-    return array.map((element) => {
-      return element.parseObject();
+  overrideInternalState(state: IGameState) {
+    this.id = state.id;
+
+    this.deck.cards = state.deck.cards.map((card: ICard) => {
+      return new Card(card.value, card.color, card.id);
     });
-  }
 
-  parseAsJSON() {
-    const state = {
-      id: this.id,
-      deck: {
-        cards: this.parseObjects(this.deck.cards),
+    this.stack.cards = state.stack.cards.map((card: ICard) => {
+      if (card.value === Value.PLUS_FOUR || card.value === Value.WILDCARD) {
+        const specialCard = new Card(card.value, undefined, card.id);
+
+        specialCard.setColor(card.color as Color);
+
+        return specialCard;
+      }
+
+      return new Card(card.value, card.color, card.id);
+    });
+
+    this.playersGroup.players = state.playersGroup.players.map(
+      (player: IPlayer) => {
+        const pl = new Player(player.id, player.name, player.pic);
+
+        pl.hand.cards = player.hand.cards.map((card: ICard) => {
+          return new Card(card.value, card.color, card.id);
+        });
+
+        return pl;
       },
-      stack: {
-        cards: this.parseObjects(this.stack.cards),
-      },
-      playersGroup: {
-        players: this.parseObjects(this.playersGroup.players),
-      },
-      turn: {
-        player: this.turn.player ? this.turn.player.parseObject() : undefined,
-      },
-      unoYellers: this.unoYellers,
-      gameDirection: this.gameDirection,
-      cardsToGive: this.cardsToGive,
-      gameModes: this.gameModes,
-    };
+    );
 
-    return state;
-  }
+    this.turn.player = state.turn.player
+      ? (this.playersGroup.players.find(
+          (player) => player.id === state.turn.player?.id,
+        ) as IPlayer)
+      : undefined;
 
-  overrideInternalState(state: any) {
-    try {
-      this.id = state.id;
-
-      this.deck.cards = state.deck.cards.map((card: any) => {
-        return new Card(card.value, card.color, card.id);
-      });
-
-      this.stack.cards = state.stack.cards.map((card: any) => {
-        if (card.value === Value.PLUS_FOUR || card.value === Value.WILDCARD) {
-          const specialCard = new Card(card.value, undefined, card.id);
-
-          specialCard.setColor(card.color);
-
-          return specialCard;
-        }
-
-        return new Card(card.value, card.color, card.id);
-      });
-
-      this.playersGroup.players = state.playersGroup.players.map(
-        (player: any) => {
-          const pl = new Player(player.id, player.name, player.pic);
-
-          pl.hand.cards = player.hand.cards.map((card: any) => {
-            return new Card(card.value, card.color, card.id);
-          });
-
-          return pl;
-        },
-      );
-
-      this.turn.player = state.turn.player
-        ? (this.playersGroup.players.find(
-            (player) => player.id === state.turn.player.id,
-          ) as Player)
-        : undefined;
-
-      this.unoYellers = state.unoYellers;
-      this.gameDirection = state.gameDirection;
-      this.cardsToGive = state.cardsToGive;
-      this.gameModes = state.gameModes;
-    } catch (e) {
-      console.error(
-        'No ha sido posible cargar el estado, posiblemente haya inconsistencia de datos',
-      );
-    }
+    this.unoYellers = state.unoYellers;
+    this.gameDirection = state.gameDirection;
+    this.cardsToGive = state.cardsToGive;
+    this.gameModes = state.gameModes;
   }
 }

@@ -1,13 +1,13 @@
-import { GameState } from './models/game-state.model';
-import { Player } from './models/player.model';
+import { IGameState, GameState } from './models/game-state.model';
+import { IPlayer } from './models/player.model';
 import { GameEvents } from './events/game-events';
 import { GameEvent } from './events/game-event.enum';
 import { CommandService } from './commands/command.service';
-import { Card } from './models/card.model';
+import { ICard } from './models/card.model';
 import { GameModes } from './models/game-modes';
 
 export class GameEngine {
-  private readonly state: GameState;
+  private readonly state: IGameState;
   private readonly commandService: CommandService;
   private readonly gameEvents: GameEvents;
 
@@ -41,18 +41,28 @@ export class GameEngine {
   }
 
   get gameStateAsJSON() {
-    return this.state.parseAsJSON();
+    return {
+      id: this.state.id,
+      deck: this.state.deck,
+      stack: this.state.stack,
+      playersGroup: this.state.playersGroup,
+      turn: this.state.turn,
+      unoYellers: this.state.unoYellers,
+      gameDirection: this.state.gameDirection,
+      cardsToGive: this.state.cardsToGive,
+      gameModes: this.state.gameModes,
+    } as IGameState;
   }
 
   start(gameModes?: GameModes) {
     return this.commandService.startGame(this.state, gameModes);
   }
 
-  join(players: Player[]) {
+  join(players: IPlayer[]) {
     return this.commandService.addPlayers(this.state, players);
   }
 
-  playCard(playerId: string, card: Card) {
+  playCard(playerId: string, card: ICard) {
     return this.commandService.playCard(this.state, playerId, card);
   }
 
@@ -64,7 +74,7 @@ export class GameEngine {
     return this.commandService.yellUno(this.state, yellerId);
   }
 
-  overrideInternalState(externalState: any) {
+  overrideInternalState(externalState: IGameState) {
     this.state.overrideInternalState(externalState);
   }
 }

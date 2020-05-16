@@ -1,6 +1,6 @@
 import { CommandsInvoker } from './commands-invoker';
-import { GameState } from '../models/game-state.model';
-import { Player } from '../models/player.model';
+import { IGameState } from '../models/game-state.model';
+import { IPlayer } from '../models/player.model';
 import { BuildDeckCommand } from './build-deck.command';
 import { StartGameCommand } from './start-game.command';
 import { AddPlayersCommand } from './add-players.command';
@@ -8,7 +8,7 @@ import { PlayCardCommand } from './play-card.command';
 import { TakeDeckCardCommand } from './take-deck-card.command';
 import { FinalizeTurnCommand } from './finalize-turn.command';
 import { YellUnoCommand } from './yell-uno.command';
-import { Card } from '../models/card.model';
+import { ICard } from '../models/card.model';
 import { GameModes } from '../models/game-modes';
 
 /**
@@ -28,7 +28,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  startGame(currentState: GameState, gameModes?: GameModes) {
+  startGame(currentState: IGameState, gameModes?: GameModes) {
     const invoker = new CommandsInvoker([
       new BuildDeckCommand(),
       new StartGameCommand(gameModes),
@@ -45,7 +45,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  addPlayers(currentState: GameState, players: Player[]) {
+  addPlayers(currentState: IGameState, players: IPlayer[]) {
     const invoker = new CommandsInvoker([new AddPlayersCommand(players)]);
 
     return invoker.invoke(currentState);
@@ -60,7 +60,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  playCard(currentState: GameState, playerId: string, card: Card) {
+  playCard(currentState: IGameState, playerId: string, card: ICard) {
     const invoker = new CommandsInvoker([
       new PlayCardCommand(playerId, card),
       new FinalizeTurnCommand(),
@@ -76,7 +76,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  takeCard(currentState: GameState) {
+  takeCard(currentState: IGameState) {
     const invoker = new CommandsInvoker([
       new TakeDeckCardCommand(),
       new FinalizeTurnCommand(),
@@ -93,7 +93,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  yellUno(currentState: GameState, yellerId?: string) {
+  yellUno(currentState: IGameState, yellerId?: string) {
     const invoker = new CommandsInvoker([new YellUnoCommand(yellerId)]);
 
     return invoker.invoke(currentState);

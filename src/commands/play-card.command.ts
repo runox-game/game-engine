@@ -1,10 +1,10 @@
 import { GameCommand } from './game.command';
-import { GameState } from '../models/game-state.model';
+import { IGameState } from '../models/game-state.model';
 import { Value } from '../models/values.model';
 import { CommandValidation } from './command-result';
 import { AfterPlayCardEvent } from '../events/after-play-card.event';
-import { Player } from '../models/player.model';
-import { Card } from '../models/card.model';
+import { IPlayer } from '../models/player.model';
+import { ICard, Card } from '../models/card.model';
 import { GameEndEvent } from '../events/game-end.event';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 
@@ -13,7 +13,7 @@ import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
  */
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
-  private readonly card: Card;
+  private readonly card: ICard;
 
   /**
    * Class that allows a player to play a card from his hand
@@ -21,7 +21,7 @@ export class PlayCardCommand extends GameCommand {
    * @param playerId - identifier of the player who wants to play a card
    * @param card - card to be played
    */
-  constructor(playerId: string, card: Card) {
+  constructor(playerId: string, card: ICard) {
     super();
 
     this.playerId = playerId;
@@ -31,7 +31,7 @@ export class PlayCardCommand extends GameCommand {
       card instanceof Card ? card : new Card(card.value, card.color, card.id);
   }
 
-  execute(state: GameState) {
+  execute(state: IGameState) {
     state.turn.player?.hand.removeCard(this.card);
 
     state.stack.addCard(this.card);
@@ -101,18 +101,14 @@ export class PlayCardCommand extends GameCommand {
       }
     }
 
-    const player = state.playersGroup.getPlayerById(this.playerId) as Player;
+    const player = state.playersGroup.getPlayerById(this.playerId) as IPlayer;
 
     this.events.dispatchAfterPlayCard(
       new AfterPlayCardEvent(this.card, player),
     );
-
-    console.log(
-      `El jugador ${state.turn.player?.id} ha tirado la carta ${this.card.value} ${this.card.color} al stack`,
-    );
   }
 
-  private checkForPlayersWhoShouldHaveYelledUno(state: GameState) {
+  private checkForPlayersWhoShouldHaveYelledUno(state: IGameState) {
     const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
       (player) =>
         player.id !== state.turn.player?.id &&
@@ -129,7 +125,7 @@ export class PlayCardCommand extends GameCommand {
     });
   }
 
-  validate(state: GameState) {
+  validate(state: IGameState) {
     const player = state.playersGroup.getPlayerById(this.playerId);
 
     if (!player) {

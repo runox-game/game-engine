@@ -1,13 +1,19 @@
-import { Player } from './player.model';
+import { IPlayer } from './player.model';
 
-export class Turn {
-  player: Player | undefined;
+export interface ITurn {
+  player?: IPlayer;
+
+  setPlayerTurn(player: IPlayer): void;
+}
+
+export class Turn implements ITurn {
+  player: IPlayer | undefined;
 
   constructor() {
     this.player = undefined;
   }
 
-  setPlayerTurn(player: Player) {
+  setPlayerTurn(player: IPlayer) {
     this.player = player;
   }
 }

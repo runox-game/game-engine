@@ -1,9 +1,9 @@
 import { GameCommand } from './game.command';
-import { GameState } from '../models/game-state.model';
+import { IGameState } from '../models/game-state.model';
 import { CommandValidation } from './command-result';
-import { Player } from '../models/player.model';
+import { IPlayer } from '../models/player.model';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
-import { Card } from '../models/card.model';
+import { ICard } from '../models/card.model';
 
 /**
  * Class that allows the current player to take a card from the deck
@@ -16,10 +16,10 @@ export class TakeDeckCardCommand extends GameCommand {
     super();
   }
 
-  execute(state: GameState) {
-    const currentPlayer = state.turn.player as Player;
+  execute(state: IGameState) {
+    const currentPlayer = state.turn.player as IPlayer;
 
-    let newCards: Card[];
+    let newCards: ICard[];
 
     if (state.gameModes.randomTakeDeckCard) {
       newCards = state.giveCards(this.randomizeInteger(1, 5), currentPlayer);
@@ -36,7 +36,7 @@ export class TakeDeckCardCommand extends GameCommand {
     this.checkForPlayersWhoShouldHaveYelledUno(state);
   }
 
-  private checkForPlayersWhoShouldHaveYelledUno(state: GameState) {
+  private checkForPlayersWhoShouldHaveYelledUno(state: IGameState) {
     const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
       (player) =>
         player.id !== state.turn.player?.id &&
@@ -53,7 +53,7 @@ export class TakeDeckCardCommand extends GameCommand {
     });
   }
 
-  validate(state: GameState) {
+  validate(state: IGameState) {
     if (!state.turn.player) {
       return new CommandValidation(false, 'No se le asigno turno a un jugador');
     }

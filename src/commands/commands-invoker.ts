@@ -1,5 +1,5 @@
 import { GameCommand } from './game.command';
-import { GameState } from '../models/game-state.model';
+import { IGameState } from '../models/game-state.model';
 import { Observable } from 'rxjs';
 
 /**
@@ -25,15 +25,13 @@ export class CommandsInvoker {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  invoke(currentState: GameState) {
+  invoke(currentState: IGameState) {
     const observable = new Observable<void>((subscriber) => {
       try {
         this.commands.forEach((command) => {
           const commandValidation = command.validate(currentState);
 
           if (!commandValidation.isValid) {
-            console.error(commandValidation.error);
-
             throw new Error(commandValidation.error);
           }
 

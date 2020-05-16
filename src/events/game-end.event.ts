@@ -1,4 +1,4 @@
-import { Player } from '../models/player.model';
+import { IPlayer } from '../models/player.model';
 
 /**
  * Event that fires when the game ends
@@ -10,5 +10,5 @@ export class GameEndEvent {
    * @param winner - game winner
    * @param score - game winner score
    */
-  constructor(public readonly winner: Player, public readonly score: number) {}
+  constructor(public readonly winner: IPlayer, public readonly score: number) {}
 }
