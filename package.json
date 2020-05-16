@@ -10,7 +10,8 @@
     "test:coverage": "jest --silent --verbose --coverage",
     "test:watch": "jest --watch",
     "lint": "tslint -c tslint.json -p tsconfig.json",
-    "publish:patch": "webpack && npm version patch && npm publish --access public"
+    "publish:patch": "webpack && npm version patch && npm publish --access public",
+    "publish:pack": "webpack && npm version patch && npm pack"
   },
   "keywords": [
     "uno",
