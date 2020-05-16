@@ -1,6 +1,6 @@
 {
   "name": "@runox-game/game-engine",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "RunoX game engine",
   "main": "dist/game-engine.node.js",
   "browser": "dist/game-engine.browser.js",
