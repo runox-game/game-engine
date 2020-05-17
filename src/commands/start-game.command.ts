@@ -19,6 +19,7 @@ export class StartGameCommand extends GameCommand {
 
     this.gameModes = gameModes || {
       randomTakeDeckCard: false,
+      dedicatePlusFour: false,
     };
   }
 

@@ -14,21 +14,22 @@ import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 export class PlayCardCommand extends GameCommand {
   private readonly playerId: string;
   private readonly card: ICard;
+  private readonly toPlayerId?: string;
 
   /**
    * Class that allows a player to play a card from his hand
    *
    * @param playerId - identifier of the player who wants to play a card
    * @param card - card to be played
+   * @param toPlayerId - identifier of the player who will receive the card
    */
-  constructor(playerId: string, card: ICard) {
+  constructor(playerId: string, card: ICard, toPlayerId?: string) {
     super();
 
     this.playerId = playerId;
-
     this.card =
-      // @ts-ignore
       card instanceof Card ? card : new Card(card.value, card.color, card.id);
+    this.toPlayerId = toPlayerId;
   }
 
   execute(state: IGameState) {
@@ -54,15 +55,25 @@ export class PlayCardCommand extends GameCommand {
     this.checkForPlayersWhoShouldHaveYelledUno(state);
 
     if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
-      // Es importante el orden en que se aplica los efectos.
-      // Primero se aplica +4 y luego saltea turno.
-      const newCards = state.giveCards(4, state.nextPlayerToPlay);
+      if (!state.gameModes.dedicatePlusFour) {
+        // Es importante el orden en que se aplica los efectos.
+        // Primero se aplica +4 y luego saltea turno.
+        const newCards = state.giveCards(4, state.nextPlayerToPlay);
 
-      this.events.dispatchAfterTakeCards(
-        new AfterTakeCardsEvent(newCards, state.nextPlayerToPlay),
-      );
+        this.events.dispatchAfterTakeCards(
+          new AfterTakeCardsEvent(newCards, state.nextPlayerToPlay),
+        );
 
-      state.turn.setPlayerTurn(state.nextPlayerToPlay);
+        state.turn.setPlayerTurn(state.nextPlayerToPlay);
+      } else {
+        const toPlayer = state.playersGroup.getPlayerById(this.toPlayerId as string);
+
+        const newCards = state.giveCards(4, toPlayer);
+
+        this.events.dispatchAfterTakeCards(
+          new AfterTakeCardsEvent(newCards, toPlayer),
+        );
+      }
     }
 
     if (state.stack.cardOnTop?.value === Value.PLUS_TWO) {
@@ -101,7 +112,7 @@ export class PlayCardCommand extends GameCommand {
       }
     }
 
-    const player = state.playersGroup.getPlayerById(this.playerId) as IPlayer;
+    const player = state.playersGroup.getPlayerById(this.playerId);
 
     this.events.dispatchAfterPlayCard(
       new AfterPlayCardEvent(this.card, player),
@@ -187,6 +198,32 @@ export class PlayCardCommand extends GameCommand {
         false,
         'La carta que quiere tirar no tiene el mismo color o valor que la del stack',
       );
+    }
+
+    if (
+      state.gameModes.dedicatePlusFour &&
+      this.card.value === Value.PLUS_FOUR &&
+      !this.toPlayerId
+    ) {
+      return new CommandValidation(
+        false,
+        'Debe ingresar el identificador del jugador al que se le dedica el +4',
+      );
+    }
+
+    if (
+      state.gameModes.dedicatePlusFour &&
+      this.card.value === Value.PLUS_FOUR &&
+      this.toPlayerId
+    ) {
+      const toPlayer = state.playersGroup.getPlayerById(this.toPlayerId);
+
+      if (!toPlayer) {
+        return new CommandValidation(
+          false,
+          `No se encontro el jugador con id: ${this.toPlayerId}`,
+        );
+      }
     }
 
     return new CommandValidation(true);

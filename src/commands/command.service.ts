@@ -57,12 +57,18 @@ export class CommandService {
    * @param currentState - current game state
    * @param playerId - identifier of the player who wants to play a card
    * @param card - card to be played
+   * @param toPlayerId - identifier of the player who will receive the card
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  playCard(currentState: IGameState, playerId: string, card: ICard) {
+  playCard(
+    currentState: IGameState,
+    playerId: string,
+    card: ICard,
+    toPlayerId?: string,
+  ) {
     const invoker = new CommandsInvoker([
-      new PlayCardCommand(playerId, card),
+      new PlayCardCommand(playerId, card, toPlayerId),
       new FinalizeTurnCommand(),
     ]);
 

@@ -64,10 +64,65 @@ describe('PlayCardCommand', () => {
     expect(commandValidation.isValid).toBeFalsy();
   });
 
+  it('should return error result when dedicatePlusFour is on but not toPlayerId set', () => {
+    const state = new GameState();
+
+    state.gameModes = {
+      randomTakeDeckCard: false,
+      dedicatePlusFour: true,
+    };
+
+    const player = new Player('p1', 'player 1', 'avatar');
+    state.playersGroup.addPlayer(player);
+    state.turn.setPlayerTurn(player);
+
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
+    state.stack.addCard(stackCardRedTwo);
+
+    const handCardPlusFour = new Card(Value.PLUS_FOUR);
+    handCardPlusFour.setColor(Color.RED);
+
+    player.hand.addCard(handCardPlusFour);
+
+    const command = new PlayCardCommand(player.id, handCardPlusFour);
+
+    const commandValidation = command.validate(state);
+
+    expect(commandValidation.isValid).toBeFalsy();
+  });
+
+  it('should return error result when dedicatePlusFour is on but toPlayerId invalid', () => {
+    const state = new GameState();
+
+    state.gameModes = {
+      randomTakeDeckCard: false,
+      dedicatePlusFour: true,
+    };
+
+    const player1 = new Player('p1', 'player 1', 'avatar');
+    const player2 = new Player('p2', 'player 2', 'avatar');
+
+    state.playersGroup.addPlayers([player1, player2]);
+    state.turn.setPlayerTurn(player1);
+
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
+    state.stack.addCard(stackCardRedTwo);
+
+    const handCardPlusFour = new Card(Value.PLUS_FOUR);
+    handCardPlusFour.setColor(Color.RED);
+
+    player1.hand.addCard(handCardPlusFour);
+
+    const command = new PlayCardCommand(player1.id, handCardPlusFour, 'p3');
+
+    expect(() => command.validate(state)).toThrowError();
+  });
+
   it('should discard current player card when we execute the command', () => {
     const state = new GameState();
 
     const player = new Player('p1', 'player 1', 'avatar');
+
     state.playersGroup.addPlayer(player);
     state.turn.setPlayerTurn(player);
 
@@ -112,5 +167,51 @@ describe('PlayCardCommand', () => {
     // si se hubiese jugado una carta 'normal' el siguiente jugador deberia
     // ser el player 1 pero como se jugo un reverse el siguiente es player 2
     expect(state.nextPlayerToPlay?.id).toEqual(player2.id);
+  });
+
+  it('should add 4 cards to player with id equal to toPlayerId when dedicatedPlusFour is on', () => {
+    const state = new GameState();
+    state.deck.addCards([
+      new Card(Value.EIGHT, Color.BLUE),
+      new Card(Value.EIGHT, Color.BLUE),
+      new Card(Value.EIGHT, Color.BLUE),
+      new Card(Value.EIGHT, Color.BLUE),
+      new Card(Value.EIGHT, Color.BLUE),
+    ]);
+    state.gameModes = {
+      randomTakeDeckCard: false,
+      dedicatePlusFour: true,
+    };
+
+    const player1 = new Player('p1', 'player 1', 'avatar');
+    const player2 = new Player('p2', 'player 2', 'avatar');
+    const player3 = new Player('p3', 'player 3', 'avatar');
+
+    state.playersGroup.addPlayers([player1, player2, player3]);
+    state.turn.setPlayerTurn(player1);
+
+    const stackCardRedTwo = new Card(Value.TWO, Color.RED);
+    state.stack.addCard(stackCardRedTwo);
+
+    const handCardPlusFour = new Card(Value.PLUS_FOUR);
+    handCardPlusFour.setColor(Color.RED);
+    player1.hand.addCard(handCardPlusFour);
+
+    const stackSpy = spyOn(state.stack, 'addCard').and.callThrough();
+    // @ts-ignore
+    const spy = spyOn(state.turn.player.hand, 'removeCard').and.callThrough();
+
+    const command = new PlayCardCommand(
+      player1.id,
+      handCardPlusFour,
+      player3.id,
+    );
+    command.execute(state);
+
+    expect(spy).toBeCalled();
+    expect(stackSpy).toBeCalled();
+    expect(state.turn.player?.hand.cards.length).toBe(0);
+    expect(state.stack.cards.length).toBe(2);
+    expect(state.playersGroup.players[2].hand.cards.length).toBe(4); // player3 took 4 dedicated cards
   });
 });

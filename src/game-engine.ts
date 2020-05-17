@@ -40,6 +40,10 @@ export class GameEngine {
     return this.state.stack.cardOnTop;
   }
 
+  get modes() {
+    return this.state.gameModes;
+  }
+
   get gameStateAsJSON() {
     return {
       id: this.state.id,
@@ -62,8 +66,8 @@ export class GameEngine {
     return this.commandService.addPlayers(this.state, players);
   }
 
-  playCard(playerId: string, card: ICard) {
-    return this.commandService.playCard(this.state, playerId, card);
+  playCard(playerId: string, card: ICard, toPlayerId?: string) {
+    return this.commandService.playCard(this.state, playerId, card, toPlayerId);
   }
 
   takeCard() {
