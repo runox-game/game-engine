@@ -1,6 +1,6 @@
 {
   "name": "@runox-game/game-engine",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "RunoX game engine",
   "main": "lib/game-engine.js",
   "types": "lib/game-engine.d.ts",
