@@ -5,8 +5,8 @@ import { GameEvent } from './events/game-event.enum';
 import { CommandService } from './commands/command.service';
 import { ICard } from './models/card.model';
 import { GameModes } from './models/game-modes';
-import { Observable, of } from "rxjs";
-import { catchError } from "rxjs/operators";
+import { Observable, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export class GameEngine {
   private readonly state: IGameState;
@@ -65,30 +65,47 @@ export class GameEngine {
   }
 
   start(gameModes?: GameModes): Observable<void> {
-    return this.commandService.startGame(this.state, gameModes).pipe(catchError(this.handleError()));
-  }
-  
-  join(players: IPlayer[]): Observable<void> {
-    return this.commandService.addPlayers(this.state, players).pipe(catchError(this.handleError()));
+    return this.commandService
+      .startGame(this.state, gameModes)
+      .pipe(catchError(this.handleError()));
   }
 
-  playCard(playerId: string, card: ICard, toPlayerId?: string): Observable<void> {
-    return this.commandService.playCard(this.state, playerId, card, toPlayerId).pipe(catchError(this.handleError()));
+  join(players: IPlayer[]): Observable<void> {
+    return this.commandService
+      .addPlayers(this.state, players)
+      .pipe(catchError(this.handleError()));
+  }
+
+  playCard(
+    playerId: string,
+    card: ICard,
+    toPlayerId?: string,
+  ): Observable<void> {
+    return this.commandService
+      .playCard(this.state, playerId, card, toPlayerId)
+      .pipe(catchError(this.handleError()));
   }
 
   takeCard(): Observable<void> {
-    return this.commandService.takeCard(this.state).pipe(catchError(this.handleError()));
+    return this.commandService
+      .takeCard(this.state)
+      .pipe(catchError(this.handleError()));
   }
 
   uno(yellerId?: string): Observable<void> {
-    return this.commandService.yellUno(this.state, yellerId).pipe(catchError(this.handleError()));
+    return this.commandService
+      .yellUno(this.state, yellerId)
+      .pipe(catchError(this.handleError()));
   }
 
   overrideInternalState(externalState: IGameState) {
     this.state.overrideInternalState(externalState);
   }
 
-  private handleError(): (err: any, caught: Observable<void>) => Observable<any> {
+  private handleError(): (
+    err: any,
+    caught: Observable<void>,
+  ) => Observable<any> {
     return (e: any) => {
       this.gameEvents.dispatchError(e);
       return of(e);
