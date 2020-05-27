@@ -1,13 +1,13 @@
-import { Subject } from "rxjs";
-import { GameEvent } from "./game-event.enum";
-import { AfterPlayCardEvent } from "./after-play-card.event";
-import { AfterTakeCardsEvent } from "./after-take-cards.event";
-import { BeforeTurnEvent } from "./before-turn.event";
-import { GameEndEvent } from "./game-end.event";
-import { AfterYellUnoEvent } from "./after-yell-uno.event";
-import { ChangeColorEvent } from "./color-change.event";
-import { SkipEvent } from "./skip.event";
-import { ReverseEvent } from "./reverse.event";
+import { Subject } from 'rxjs';
+import { GameEvent } from './game-event.enum';
+import { AfterPlayCardEvent } from './after-play-card.event';
+import { AfterTakeCardsEvent } from './after-take-cards.event';
+import { BeforeTurnEvent } from './before-turn.event';
+import { GameEndEvent } from './game-end.event';
+import { AfterYellUnoEvent } from './after-yell-uno.event';
+import { ChangeColorEvent } from './color-change.event';
+import { SkipEvent } from './skip.event';
+import { ReverseEvent } from './reverse.event';
 
 /**
  * Game event utility class
@@ -89,7 +89,6 @@ export class GameEvents {
   get changeColor$() {
     return this.events[GameEvent.CHANGE_COLOR].asObservable();
   }
-
 
   /**
    * Observable that emits values when the color of card has changed
@@ -181,7 +180,6 @@ export class GameEvents {
   dispatchSkip(data: SkipEvent) {
     return this.events[GameEvent.SKIP].next(data);
   }
-  
 
   /**
    * Emits value the direction is changed by revert card
@@ -193,7 +191,7 @@ export class GameEvents {
   }
 
   /**
-   * Emits error 
+   * Emits error
    *
    * @param error
    */
