@@ -10,6 +10,7 @@ import { FinalizeTurnCommand } from './finalize-turn.command';
 import { YellUnoCommand } from './yell-uno.command';
 import { ICard } from '../models/card.model';
 import { GameModes } from '../models/game-modes';
+import { Observable } from 'rxjs';
 
 /**
  * Class that serves as an entry point for invoking commands within the game
@@ -28,7 +29,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  startGame(currentState: IGameState, gameModes?: GameModes) {
+  startGame(currentState: IGameState, gameModes?: GameModes): Observable<void> {
     const invoker = new CommandsInvoker([
       new BuildDeckCommand(),
       new StartGameCommand(gameModes),
@@ -45,7 +46,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  addPlayers(currentState: IGameState, players: IPlayer[]) {
+  addPlayers(currentState: IGameState, players: IPlayer[]): Observable<void> {
     const invoker = new CommandsInvoker([new AddPlayersCommand(players)]);
 
     return invoker.invoke(currentState);
@@ -66,7 +67,7 @@ export class CommandService {
     playerId: string,
     card: ICard,
     toPlayerId?: string,
-  ) {
+  ): Observable<void> {
     const invoker = new CommandsInvoker([
       new PlayCardCommand(playerId, card, toPlayerId),
       new FinalizeTurnCommand(),
@@ -82,7 +83,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  takeCard(currentState: IGameState) {
+  takeCard(currentState: IGameState): Observable<void> {
     const invoker = new CommandsInvoker([
       new TakeDeckCardCommand(),
       new FinalizeTurnCommand(),
@@ -99,7 +100,7 @@ export class CommandService {
    * @returns observable with the intention of being able to track the success or failure
    * of the command group invocation
    */
-  yellUno(currentState: IGameState, yellerId?: string) {
+  yellUno(currentState: IGameState, yellerId?: string): Observable<void> {
     const invoker = new CommandsInvoker([new YellUnoCommand(yellerId)]);
 
     return invoker.invoke(currentState);

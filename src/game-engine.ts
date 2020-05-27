@@ -5,6 +5,8 @@ import { GameEvent } from './events/game-event.enum';
 import { CommandService } from './commands/command.service';
 import { ICard } from './models/card.model';
 import { GameModes } from './models/game-modes';
+import { Observable, of } from "rxjs";
+import { catchError } from "rxjs/operators";
 
 export class GameEngine {
   private readonly state: IGameState;
@@ -25,6 +27,10 @@ export class GameEngine {
       [GameEvent.AFTER_YELL_UNO]: this.gameEvents.afterYellUno$,
       [GameEvent.BEFORE_TURN]: this.gameEvents.beforeTurn$,
       [GameEvent.GAME_END]: this.gameEvents.gameEnd$,
+      [GameEvent.CHANGE_COLOR]: this.gameEvents.changeColor$,
+      [GameEvent.SKIP]: this.gameEvents.skip$,
+      [GameEvent.REVERSE]: this.gameEvents.reverse$,
+      [GameEvent.ERROR]: this.gameEvents.error$,
     };
   }
 
@@ -58,27 +64,34 @@ export class GameEngine {
     } as IGameState;
   }
 
-  start(gameModes?: GameModes) {
-    return this.commandService.startGame(this.state, gameModes);
+  start(gameModes?: GameModes): Observable<void> {
+    return this.commandService.startGame(this.state, gameModes).pipe(catchError(this.handleError()));
+  }
+  
+  join(players: IPlayer[]): Observable<void> {
+    return this.commandService.addPlayers(this.state, players).pipe(catchError(this.handleError()));
   }
 
-  join(players: IPlayer[]) {
-    return this.commandService.addPlayers(this.state, players);
+  playCard(playerId: string, card: ICard, toPlayerId?: string): Observable<void> {
+    return this.commandService.playCard(this.state, playerId, card, toPlayerId).pipe(catchError(this.handleError()));
   }
 
-  playCard(playerId: string, card: ICard, toPlayerId?: string) {
-    return this.commandService.playCard(this.state, playerId, card, toPlayerId);
+  takeCard(): Observable<void> {
+    return this.commandService.takeCard(this.state).pipe(catchError(this.handleError()));
   }
 
-  takeCard() {
-    return this.commandService.takeCard(this.state);
-  }
-
-  uno(yellerId?: string) {
-    return this.commandService.yellUno(this.state, yellerId);
+  uno(yellerId?: string): Observable<void> {
+    return this.commandService.yellUno(this.state, yellerId).pipe(catchError(this.handleError()));
   }
 
   overrideInternalState(externalState: IGameState) {
     this.state.overrideInternalState(externalState);
+  }
+
+  private handleError(): (err: any, caught: Observable<void>) => Observable<any> {
+    return (e: any) => {
+      this.gameEvents.dispatchError(e);
+      return of(e);
+    };
   }
 }

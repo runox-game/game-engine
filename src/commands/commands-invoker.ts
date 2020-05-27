@@ -32,7 +32,8 @@ export class CommandsInvoker {
           const commandValidation = command.validate(currentState);
 
           if (!commandValidation.isValid) {
-            throw new Error(commandValidation.error);
+            subscriber.error(commandValidation.error);
+            return;
           }
 
           command.execute(currentState);
