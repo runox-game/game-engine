@@ -9,8 +9,10 @@ import { GameEvents } from '../events/game-events';
 import { Value } from './values.model';
 import { GameModes } from './game-modes';
 import { Color } from './color.model';
+import { BehaviorSubject } from 'rxjs';
+import { ILog, LogFactory, ILogger } from '../log/log.factory';
 
-export interface IGameState {
+export interface IGameState extends ILogger {
   id: number;
   readonly deck: IDeck;
   readonly stack: IStack;
@@ -48,6 +50,7 @@ export class GameState implements IGameState {
   gameModes: GameModes;
   winner: IPlayer | undefined;
   winnerScore: number;
+  log$: BehaviorSubject<ILog>;
 
   constructor() {
     this.id = new Date().getTime();
@@ -65,6 +68,7 @@ export class GameState implements IGameState {
     };
     this.winner = undefined;
     this.winnerScore = 0;
+    this.log$ = new BehaviorSubject<ILog>(LogFactory.default());
   }
 
   get nextPlayerToPlay() {
@@ -193,5 +197,9 @@ export class GameState implements IGameState {
     }
     this.winner = player;
     this.winnerScore = score;
+  }
+
+  log(data: ILog) {
+    this.log$.next(data);
   }
 }
