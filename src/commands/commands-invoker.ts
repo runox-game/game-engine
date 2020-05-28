@@ -31,18 +31,18 @@ export class CommandsInvoker {
       try {
         this.commands.forEach((command) => {
           
-          command.logMessage(currentState, typeof command, LogLevel.BEFORE_VALIDATION);
+          currentState.logMessage(typeof command, LogLevel.BEFORE_VALIDATION);
           const commandValidation = command.validate(currentState);
           if (!commandValidation.isValid) {
-            command.logMessage(currentState, `${typeof command} invalid` , LogLevel.AFTER_VALIDATION);
+            currentState.logMessage(`${typeof command} invalid` , LogLevel.AFTER_VALIDATION);
             subscriber.error(commandValidation.error);
             return;
           }
-          command.logMessage(currentState, `${typeof command} valid` , LogLevel.AFTER_VALIDATION);
+          currentState.logMessage(`${typeof command} valid` , LogLevel.AFTER_VALIDATION);
           
-          command.logMessage(currentState, typeof command, LogLevel.BEFORE_COMMAND);
+          currentState.logMessage(typeof command, LogLevel.BEFORE_COMMAND);
           command.execute(currentState);
-          command.logMessage(currentState, typeof command, LogLevel.BEFORE_COMMAND);
+          currentState.logMessage(typeof command, LogLevel.BEFORE_COMMAND);
           
         });
 
