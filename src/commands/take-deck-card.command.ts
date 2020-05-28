@@ -54,6 +54,10 @@ export class TakeDeckCardCommand extends GameCommand {
   }
 
   validate(state: IGameState) {
+    if (!state.winner) {
+      return new CommandValidation(false, 'Runox ya terminó');
+    }
+
     if (!state.turn.player) {
       return new CommandValidation(false, 'No se le asigno turno a un jugador');
     }

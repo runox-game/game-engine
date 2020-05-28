@@ -3,12 +3,11 @@ import { IGameState } from '../models/game-state.model';
 import { Value } from '../models/values.model';
 import { CommandValidation } from './command-result';
 import { AfterPlayCardEvent } from '../events/after-play-card.event';
-import { IPlayer } from '../models/player.model';
 import { ICard, Card } from '../models/card.model';
 import { GameEndEvent } from '../events/game-end.event';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
-import { ReverseEvent } from "../events/reverse.event";
-import { SkipEvent } from "../events/skip.event";
+import { ReverseEvent } from '../events/reverse.event';
+import { SkipEvent } from '../events/skip.event';
 
 /**
  * Class that allows a player to play a card from his hand
@@ -51,6 +50,8 @@ export class PlayCardCommand extends GameCommand {
           return score;
         }, 0);
 
+      state.setWinner(state.turn.player, score);
+
       this.events.dispatchGameEnd(new GameEndEvent(state.turn.player, score));
     }
 
@@ -68,7 +69,9 @@ export class PlayCardCommand extends GameCommand {
 
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
       } else {
-        const toPlayer = state.playersGroup.getPlayerById(this.toPlayerId as string);
+        const toPlayer = state.playersGroup.getPlayerById(
+          this.toPlayerId as string,
+        );
 
         const newCards = state.giveCards(4, toPlayer);
 
@@ -103,9 +106,7 @@ export class PlayCardCommand extends GameCommand {
 
     if (state.stack.cardOnTop?.value === Value.SKIP) {
       state.turn.setPlayerTurn(state.nextPlayerToPlay);
-      this.events.dispatchSkip(
-        new SkipEvent(state.nextPlayerToPlay)
-      );
+      this.events.dispatchSkip(new SkipEvent(state.nextPlayerToPlay));
     }
 
     if (state.stack.cardOnTop?.value === Value.REVERSE) {
@@ -115,9 +116,7 @@ export class PlayCardCommand extends GameCommand {
         // si son dos jugadores entonces funciona como SKIP
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
       }
-      this.events.dispatchReverse(
-        new ReverseEvent(state.nextPlayerToPlay)
-      );
+      this.events.dispatchReverse(new ReverseEvent(state.nextPlayerToPlay));
     }
 
     const player = state.playersGroup.getPlayerById(this.playerId);
@@ -145,6 +144,10 @@ export class PlayCardCommand extends GameCommand {
   }
 
   validate(state: IGameState) {
+    if (state.winner) {
+      return new CommandValidation(false, 'Runox ya terminó');
+    }
+
     const player = state.playersGroup.getPlayerById(this.playerId);
 
     if (!player) {
