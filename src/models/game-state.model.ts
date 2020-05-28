@@ -9,9 +9,10 @@ import { GameEvents } from '../events/game-events';
 import { Value } from './values.model';
 import { GameModes } from './game-modes';
 import { Color } from './color.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ILog, LogFactory, ILogger } from '../log/log.factory';
 import { LogLevel } from '../log/log-levels.enum';
+import { filter } from 'rxjs/operators';
 
 export interface IGameState extends ILogger {
   id: number;
@@ -34,7 +35,6 @@ export interface IGameState extends ILogger {
   addStackCardsToDeck(): void;
   overrideInternalState(state: IGameState): void;
   setWinner(player: IPlayer, score: number): void;
-  logMessage(message: string, level?: LogLevel): void;
 }
 
 /** Clase que representa el estado del juego */
@@ -202,14 +202,6 @@ export class GameState implements IGameState {
   }
 
   /**
-   * log a new item
-   * @param data
-   */
-  log(data: ILog) {
-    this.log$.next(data);
-  }
-
-  /**
    * Log message in the state with a level asigned.
    *
    * @remarks
@@ -219,7 +211,15 @@ export class GameState implements IGameState {
    * @param message
    * @param level
    */
-  logMessage(message: string, level?: LogLevel) {
-    this.log({ level: level ?? LogLevel.DEFAULT, mesagge: message });
+  log(message: string, level?: LogLevel) {
+    this.log$.next({ level: level ?? LogLevel.DEFAULT, mesagge: message });
+  }
+
+  /**
+   * Return an observable with a flow of logs filtered by level
+   * @param level
+   */
+  logs(level: LogLevel): Observable<ILog> {
+    return this.log$.asObservable().pipe(filter((x) => x.level === level));
   }
 }

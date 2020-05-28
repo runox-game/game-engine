@@ -39,7 +39,7 @@ export class PlayCardCommand extends GameCommand {
     state.turn.player?.hand.removeCard(this.card);
 
     state.stack.addCard(this.card);
-    state.logMessage(
+    state.log(
       ` ${state.turn.player?.name} juega la carta ${this.card}`,
       LogLevel.USER,
     );
@@ -57,7 +57,7 @@ export class PlayCardCommand extends GameCommand {
         }, 0);
 
       state.setWinner(state.turn.player, score);
-      state.logMessage(
+      state.log(
         ` ${state.turn.player} es el ganador con score:${score}`,
         LogLevel.ALL,
       );
@@ -68,27 +68,24 @@ export class PlayCardCommand extends GameCommand {
     this.checkForPlayersWhoShouldHaveYelledUno(state);
 
     if (state.stack.cardOnTop?.value === Value.PLUS_FOUR) {
-      state.logMessage(` La carta jugada es un +4`, LogLevel.USER);
+      state.log(` La carta jugada es un +4`, LogLevel.USER);
       if (!state.gameModes.dedicatePlusFour) {
-        state.logMessage(
+        state.log(
           ` Es importante el orden en que se aplica los efectos.`,
           LogLevel.ALL,
         );
-        state.logMessage(
-          ` Primero se aplica +4 y luego saltea turno.`,
-          LogLevel.ALL,
-        );
+        state.log(` Primero se aplica +4 y luego saltea turno.`, LogLevel.ALL);
         // Es importante el orden en que se aplica los efectos.
         // Primero se aplica +4 y luego saltea turno.
         const newCards = state.giveCards(4, state.nextPlayerToPlay);
 
-        state.logMessage(
+        state.log(
           ` Es un +4, ${state.nextPlayerToPlay} toma las cartas ${newCards.map(
             (x) => x.sprite,
           )}`,
           LogLevel.ALL,
         );
-        state.logMessage(
+        state.log(
           ` Es un +4, ${state.nextPlayerToPlay} toma 4 cartas`,
           LogLevel.USER,
         );
@@ -98,14 +95,14 @@ export class PlayCardCommand extends GameCommand {
 
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
       } else {
-        state.logMessage(` Se está jugando con +4s`, LogLevel.USER);
+        state.log(` Se está jugando con +4s`, LogLevel.USER);
         const toPlayer = state.playersGroup.getPlayerById(
           this.toPlayerId as string,
         );
 
         const newCards = state.giveCards(4, toPlayer);
 
-        state.logMessage(` Es un +4, ${toPlayer} toma 4 cartas`, LogLevel.USER);
+        state.log(` Es un +4, ${toPlayer} toma 4 cartas`, LogLevel.USER);
 
         this.events.dispatchAfterTakeCards(
           new AfterTakeCardsEvent(newCards, toPlayer),
@@ -114,7 +111,7 @@ export class PlayCardCommand extends GameCommand {
     }
 
     if (state.stack.cardOnTop?.value === Value.PLUS_TWO) {
-      state.logMessage(` La carta jugada es un +2`, LogLevel.USER);
+      state.log(` La carta jugada es un +2`, LogLevel.USER);
       state.cardsToGive += 2;
 
       const nextPlayerHasPlusTwo = state.nextPlayerToPlay.hand.hasCard(
@@ -122,8 +119,8 @@ export class PlayCardCommand extends GameCommand {
       );
 
       if (!nextPlayerHasPlusTwo) {
-        state.logMessage(` El siguiente jugador no tiene +2`, LogLevel.ALL);
-        state.logMessage(
+        state.log(` El siguiente jugador no tiene +2`, LogLevel.ALL);
+        state.log(
           ` ${state.nextPlayerToPlay} debe tomar 2 cartas`,
           LogLevel.USER,
         );
@@ -143,18 +140,18 @@ export class PlayCardCommand extends GameCommand {
     }
 
     if (state.stack.cardOnTop?.value === Value.SKIP) {
-      state.logMessage(` La carta jugada es un Salto`, LogLevel.USER);
-      state.logMessage(` Se saltea a ${state.nextPlayerToPlay}`, LogLevel.USER);
+      state.log(` La carta jugada es un Salto`, LogLevel.USER);
+      state.log(` Se saltea a ${state.nextPlayerToPlay}`, LogLevel.USER);
       state.turn.setPlayerTurn(state.nextPlayerToPlay);
       this.events.dispatchSkip(new SkipEvent(state.nextPlayerToPlay));
     }
 
     if (state.stack.cardOnTop?.value === Value.REVERSE) {
-      state.logMessage(
+      state.log(
         ` La carta jugada inverte el sentido de la vuelta`,
         LogLevel.USER,
       );
-      state.logMessage(
+      state.log(
         ` Cambia de dirección a ${
           state.gameDirection == GameDirection.CLOCKWISE
             ? GameDirection.COUNTER_CLOCKWISE
@@ -165,12 +162,12 @@ export class PlayCardCommand extends GameCommand {
       state.changeDirection();
 
       if (state.playersGroup.players.length === 2) {
-        state.logMessage(
+        state.log(
           ` si son dos jugadores entonces funciona como SKIP`,
           LogLevel.ALL,
         );
         // si son dos jugadores entonces funciona como SKIP
-        state.logMessage(` Se saltea a ${state.nextPlayerToPlay}`, LogLevel.USER);
+        state.log(` Se saltea a ${state.nextPlayerToPlay}`, LogLevel.USER);
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
       }
       this.events.dispatchReverse(new ReverseEvent(state.nextPlayerToPlay));
@@ -191,7 +188,7 @@ export class PlayCardCommand extends GameCommand {
         !state.unoYellers[player.id],
     );
 
-    state.logMessage(
+    state.log(
       `${playersWhoShouldHaveYelled
         .map((x) => x.name)
         .join(', ')} deberían haber cantado UNO`,
@@ -199,7 +196,7 @@ export class PlayCardCommand extends GameCommand {
     );
     playersWhoShouldHaveYelled.forEach((player) => {
       const newCards = state.giveCards(2, player);
-      state.logMessage(`${player.name} toma dos cartas`, LogLevel.ALL);
+      state.log(`${player.name} toma dos cartas`, LogLevel.ALL);
 
       this.events.dispatchAfterTakeCards(
         new AfterTakeCardsEvent(newCards, player),

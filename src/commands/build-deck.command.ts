@@ -18,7 +18,7 @@ export class BuildDeckCommand extends GameCommand {
   }
 
   execute(state: IGameState) {
-    state.logMessage(`Construyendo tablero`, LogLevel.USER);
+    state.log(`Construyendo tablero`, LogLevel.USER);
     /*
       Traditional deck contains:
       - +4 x2
@@ -27,12 +27,12 @@ export class BuildDeckCommand extends GameCommand {
     */
     const specialCards = [Value.PLUS_FOUR, Value.WILDCARD];
 
-    state.logMessage(
+    state.log(
       `Cartas especiales ${JSON.stringify(specialCards)}`,
       LogLevel.USER,
     );
 
-    state.logMessage(`Agregando cartas`, LogLevel.USER);
+    state.log(`Agregando cartas`, LogLevel.USER);
     state.deck.addCards([
       ...specialCards.map((specialCard) => new Card(specialCard)),
       ...specialCards.map((specialCard) => new Card(specialCard)),
@@ -49,9 +49,9 @@ export class BuildDeckCommand extends GameCommand {
       });
     });
 
-    state.logMessage(`Agregando cartas`, LogLevel.USER);
+    state.log(`Agregando cartas`, LogLevel.USER);
 
-    state.logMessage(`Barajando`, LogLevel.USER);
+    state.log(`Barajando`, LogLevel.USER);
     state.deck.shuffle();
   }
 

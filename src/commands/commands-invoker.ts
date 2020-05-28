@@ -30,27 +30,24 @@ export class CommandsInvoker {
     const observable = new Observable<void>((subscriber) => {
       try {
         this.commands.forEach((command) => {
-          currentState.logMessage(
-            command.toString(),
-            LogLevel.BEFORE_VALIDATION,
-          );
+          currentState.log(command.toString(), LogLevel.BEFORE_VALIDATION);
           const commandValidation = command.validate(currentState);
           if (!commandValidation.isValid) {
-            currentState.logMessage(
+            currentState.log(
               `${command.toString()} invalid`,
               LogLevel.AFTER_VALIDATION,
             );
             subscriber.error(commandValidation.error);
             return;
           }
-          currentState.logMessage(
+          currentState.log(
             `${command.toString()} valid`,
             LogLevel.AFTER_VALIDATION,
           );
 
-          currentState.logMessage(command.toString(), LogLevel.BEFORE_COMMAND);
+          currentState.log(command.toString(), LogLevel.BEFORE_COMMAND);
           command.execute(currentState);
-          currentState.logMessage(command.toString(), LogLevel.BEFORE_COMMAND);
+          currentState.log(command.toString(), LogLevel.BEFORE_COMMAND);
         });
 
         subscriber.next();

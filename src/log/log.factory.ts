@@ -1,5 +1,6 @@
 import { Log } from './log.model';
 import { LogLevel } from './log-levels.enum';
+import { Observable } from 'rxjs';
 
 export class LogFactory {
   static default(): ILog {
@@ -8,7 +9,8 @@ export class LogFactory {
 }
 
 export interface ILogger {
-  log(data: ILog): void;
+  log(message: string, level?: LogLevel): void;
+  logs(level: LogLevel): Observable<ILog>;
 }
 
 export interface ILog {

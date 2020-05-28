@@ -27,7 +27,7 @@ export class TakeDeckCardCommand extends GameCommand {
     } else {
       newCards = state.giveCards(1, currentPlayer);
     }
-    state.logMessage(
+    state.log(
       `${currentPlayer.name} toma las cartas ${newCards
         .map((x) => x.sprite)
         .join(', ')}`,
@@ -51,7 +51,7 @@ export class TakeDeckCardCommand extends GameCommand {
         !state.unoYellers[player.id],
     );
 
-    state.logMessage(
+    state.log(
       `${playersWhoShouldHaveYelled
         .map((x) => x.name)
         .join(', ')} deberían haber cantado UNO`,
@@ -59,7 +59,7 @@ export class TakeDeckCardCommand extends GameCommand {
     );
     playersWhoShouldHaveYelled.forEach((player) => {
       const newCards = state.giveCards(2, player);
-      state.logMessage(`${player.name} toma dos cartas`, LogLevel.ALL);
+      state.log(`${player.name} toma dos cartas`, LogLevel.ALL);
 
       this.events.dispatchAfterTakeCards(
         new AfterTakeCardsEvent(newCards, player),

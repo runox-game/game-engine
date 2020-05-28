@@ -25,7 +25,10 @@ export class AddPlayersCommand extends GameCommand {
   }
 
   execute(state: IGameState) {
-    state.logMessage(`Jugadores: ${this.players.map(x => x.name).join(', ')}`, LogLevel.USER);
+    state.log(
+      `Jugadores: ${this.players.map((x) => x.name).join(', ')}`,
+      LogLevel.USER,
+    );
     state.playersGroup.addPlayers(this.players);
   }
 

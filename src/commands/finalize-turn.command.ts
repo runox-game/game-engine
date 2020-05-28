@@ -17,8 +17,11 @@ export class FinalizeTurnCommand extends GameCommand {
 
   execute(state: IGameState) {
     const nextPlayer = state.nextPlayerToPlay;
-    
-    state.logMessage(`${state.nextPlayerToPlay.name} finaliza y continúa ${nextPlayer.name}`, LogLevel.USER);
+
+    state.log(
+      `${state.nextPlayerToPlay.name} finaliza y continúa ${nextPlayer.name}`,
+      LogLevel.USER,
+    );
     state.turn.setPlayerTurn(nextPlayer);
 
     this.events.dispatchBeforeTurn(new BeforeTurnEvent(nextPlayer));
