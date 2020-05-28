@@ -29,15 +29,13 @@ export class YellUnoCommand extends GameCommand {
       : (state.turn.player as IPlayer);
 
     // es posible que el jugador tenga 2 cartas al momento de gritar UNO!
-    this.logMessage(
-      state,
+    state.logMessage(
       `es posible que el jugador tenga 2 cartas al momento de gritar UNO!`,
       LogLevel.ALL,
     );
 
     if (yeller.hand.cards.length <= 2 && !state.unoYellers[yeller.id]) {
-      this.logMessage(
-        state,
+      state.logMessage(
         `si no grito antes entonces lo marca como que grito`,
         LogLevel.ALL,
       );
@@ -45,11 +43,10 @@ export class YellUnoCommand extends GameCommand {
       // si no grito antes entonces lo marca como que grito
       state.unoYellers[yeller.id] = true;
 
-      this.logMessage(state, `${yeller.name} gritó UNO`, LogLevel.USER);
+      state.logMessage(`${yeller.name} gritó UNO`, LogLevel.USER);
       this.events.dispatchAfterYellUno(new AfterYellUnoEvent(yeller));
     } else {
-      this.logMessage(
-        state,
+      state.logMessage(
         `si tiene mas de 2 cartas o ya habia gritado entonces debemos validar que no haya mentido`,
         LogLevel.ALL,
       );
@@ -58,8 +55,7 @@ export class YellUnoCommand extends GameCommand {
       if (yeller.hand.cards.length > 2) {
         const newCards = state.giveCards(2, yeller);
 
-        this.logMessage(
-          state,
+        state.logMessage(
           `${yeller.name} toma dos cartas por cantar UNO cuando no debía`,
           LogLevel.USER,
         );
