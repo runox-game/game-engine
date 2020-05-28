@@ -145,6 +145,10 @@ export class PlayCardCommand extends GameCommand {
   }
 
   validate(state: IGameState) {
+    if (!state.winner){
+      return new CommandValidation(false, 'Runox ya terminó');
+    }
+    
     const player = state.playersGroup.getPlayerById(this.playerId);
 
     if (!player) {
