@@ -50,7 +50,7 @@ export class PlayCardCommand extends GameCommand {
           return score;
         }, 0);
 
-      state.setWinner(state.turn.player);
+      state.setWinner(state.turn.player, score);
 
       this.events.dispatchGameEnd(new GameEndEvent(state.turn.player, score));
     }
@@ -144,7 +144,7 @@ export class PlayCardCommand extends GameCommand {
   }
 
   validate(state: IGameState) {
-    if (!state.winner) {
+    if (state.winner) {
       return new CommandValidation(false, 'Runox ya terminó');
     }
 
