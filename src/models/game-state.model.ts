@@ -11,6 +11,7 @@ import { GameModes } from './game-modes';
 import { Color } from './color.model';
 import { BehaviorSubject } from 'rxjs';
 import { ILog, LogFactory, ILogger } from '../log/log.factory';
+import { LogLevel } from '../log/log-levels.enum';
 
 export interface IGameState extends ILogger {
   id: number;
@@ -33,6 +34,7 @@ export interface IGameState extends ILogger {
   addStackCardsToDeck(): void;
   overrideInternalState(state: IGameState): void;
   setWinner(player: IPlayer, score: number): void;
+  logMessage(message: string, level?: LogLevel): void;
 }
 
 /** Clase que representa el estado del juego */
@@ -199,7 +201,25 @@ export class GameState implements IGameState {
     this.winnerScore = score;
   }
 
+  /**
+   * log a new item
+   * @param data
+   */
   log(data: ILog) {
     this.log$.next(data);
+  }
+
+  /**
+   * Log message in the state with a level asigned.
+   *
+   * @remarks
+   * If levels is undefined will be assigned LogLevel.DEFAULT
+   *
+   * @param state
+   * @param message
+   * @param level
+   */
+  logMessage(message: string, level?: LogLevel) {
+    this.log({ level: level ?? LogLevel.DEFAULT, mesagge: message });
   }
 }

@@ -2,6 +2,7 @@ import { GameCommand } from './game.command';
 import { IPlayer } from '../models/player.model';
 import { IGameState } from '../models/game-state.model';
 import { CommandValidation } from './command-result';
+import { LogLevel } from '../log/log-levels.enum';
 
 /**
  * Players to add into the game
@@ -24,6 +25,7 @@ export class AddPlayersCommand extends GameCommand {
   }
 
   execute(state: IGameState) {
+    state.logMessage(`Jugadores: ${this.players.map(x => x.name).join(', ')}`, LogLevel.USER);
     state.playersGroup.addPlayers(this.players);
   }
 

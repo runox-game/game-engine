@@ -36,18 +36,4 @@ export abstract class GameCommand {
    * @returns object with validation result
    */
   abstract validate(state: IGameState): CommandValidation;
-
-  /**
-   * Log message in the state with a level asigned. 
-   * 
-   * @remarks
-   * If levels is undefined will be assigned LogLevel.DEFAULT
-   *
-   * @param state
-   * @param message
-   * @param level
-   */
-  logMessage(state: IGameState, message: string, level?: LogLevel) {
-    state.log({ level: level ?? LogLevel.DEFAULT, mesagge: message });
-  }
 }
