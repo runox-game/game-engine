@@ -36,4 +36,8 @@ export abstract class GameCommand {
    * @returns object with validation result
    */
   abstract validate(state: IGameState): CommandValidation;
+
+  public toString() {
+    return this.constructor?.name;
+  }
 }
