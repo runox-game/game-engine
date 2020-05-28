@@ -51,6 +51,7 @@ export class YellUnoCommand extends GameCommand {
     if (!state.winner){
       return new CommandValidation(false, 'Runox ya terminó');
     }
+    
     return new CommandValidation(true);
   }
 }
