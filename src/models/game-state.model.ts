@@ -22,6 +22,7 @@ export interface IGameState {
   cardsToGive: number;
   gameModes: GameModes;
   winner: IPlayer | null;
+  winnerScore: number | null;
 
   readonly nextPlayerToPlay: IPlayer;
 
@@ -29,7 +30,7 @@ export interface IGameState {
   giveCards(quantity: number, toPlayer: IPlayer): ICard[];
   addStackCardsToDeck(): void;
   overrideInternalState(state: IGameState): void;
-  setWinner(player: IPlayer): void;
+  setWinner(player: IPlayer, score: number): void;
 }
 
 /** Clase que representa el estado del juego */
@@ -46,6 +47,7 @@ export class GameState implements IGameState {
   id: number;
   gameModes: GameModes;
   winner: IPlayer | null;
+  winnerScore: number | null;
 
   constructor() {
     this.id = new Date().getTime();
@@ -62,6 +64,7 @@ export class GameState implements IGameState {
       randomTakeDeckCard: false,
     };
     this.winner = null;
+    this.winnerScore = null;
   }
 
   get nextPlayerToPlay() {
@@ -183,11 +186,12 @@ export class GameState implements IGameState {
     this.gameModes = state.gameModes;
     this.winner = state.winner;
   }
-  
-  setWinner(player: IPlayer): void {
+
+  setWinner(player: IPlayer, score: number): void {
     if (this.winner) {
-      throw new Error("Ya hay un ganador");
+      throw new Error('Ya hay un ganador');
     }
     this.winner = player;
+    this.winnerScore = score;
   }
 }
