@@ -43,30 +43,6 @@ export class TakeDeckCardCommand extends GameCommand {
     this.checkForPlayersWhoShouldHaveYelledUno(state);
   }
 
-  private checkForPlayersWhoShouldHaveYelledUno(state: IGameState) {
-    const playersWhoShouldHaveYelled = state.playersGroup.players.filter(
-      (player) =>
-        player.id !== state.turn.player?.id &&
-        player.hand.cards.length === 1 &&
-        !state.unoYellers[player.id],
-    );
-
-    state.log(
-      `${playersWhoShouldHaveYelled
-        .map((x) => x.name)
-        .join(', ')} deberían haber cantado UNO`,
-      LogLevel.ALL,
-    );
-    playersWhoShouldHaveYelled.forEach((player) => {
-      const newCards = state.giveCards(2, player);
-      state.log(`${player.name} toma dos cartas`, LogLevel.ALL);
-
-      this.events.dispatchAfterTakeCards(
-        new AfterTakeCardsEvent(newCards, player),
-      );
-    });
-  }
-
   validate(state: IGameState) {
     if (!state.winner) {
       return new CommandValidation(false, 'Runox ya terminó');
