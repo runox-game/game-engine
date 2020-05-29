@@ -4,6 +4,7 @@ import { Card } from '../models/card.model';
 import { COLORS } from '../models/color.model';
 import { Value, VALUES } from '../models/values.model';
 import { CommandValidation } from './command-result';
+import { LogLevel } from '../log/log-levels.enum';
 
 /**
  * Class that allows cards creation and add them to the game deck
@@ -17,6 +18,7 @@ export class BuildDeckCommand extends GameCommand {
   }
 
   execute(state: IGameState) {
+    state.log(`Construyendo tablero`, LogLevel.USER);
     /*
       Traditional deck contains:
       - +4 x2
@@ -25,6 +27,12 @@ export class BuildDeckCommand extends GameCommand {
     */
     const specialCards = [Value.PLUS_FOUR, Value.WILDCARD];
 
+    state.log(
+      `Cartas especiales ${JSON.stringify(specialCards)}`,
+      LogLevel.USER,
+    );
+
+    state.log(`Agregando cartas`, LogLevel.USER);
     state.deck.addCards([
       ...specialCards.map((specialCard) => new Card(specialCard)),
       ...specialCards.map((specialCard) => new Card(specialCard)),
@@ -41,6 +49,9 @@ export class BuildDeckCommand extends GameCommand {
       });
     });
 
+    state.log(`Agregando cartas`, LogLevel.USER);
+
+    state.log(`Barajando`, LogLevel.USER);
     state.deck.shuffle();
   }
 

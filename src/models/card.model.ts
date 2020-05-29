@@ -13,7 +13,7 @@ export interface ICard {
   isSpecialCard(): boolean;
   hasEffects(): boolean;
   setColor(color: Color): void;
-  isPlayable(otherCard: Card): boolean;
+  isPlayable(otherCard: ICard): boolean;
 }
 
 export class Card implements ICard {
@@ -85,7 +85,7 @@ export class Card implements ICard {
     this.color = color;
   }
 
-  isPlayable(otherCard: Card) {
+  isPlayable(otherCard: ICard) {
     if (this.isSpecialCard()) {
       return true;
     }

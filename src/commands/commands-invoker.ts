@@ -1,6 +1,7 @@
 import { GameCommand } from './game.command';
 import { IGameState } from '../models/game-state.model';
 import { Observable } from 'rxjs';
+import { LogLevel } from '../log/log-levels.enum';
 
 /**
  *  Class in charge of grouping the execution of commands that alter the game state
@@ -29,14 +30,24 @@ export class CommandsInvoker {
     const observable = new Observable<void>((subscriber) => {
       try {
         this.commands.forEach((command) => {
+          currentState.log(command.toString(), LogLevel.BEFORE_VALIDATION);
           const commandValidation = command.validate(currentState);
-
           if (!commandValidation.isValid) {
+            currentState.log(
+              `${command.toString()} invalid`,
+              LogLevel.AFTER_VALIDATION,
+            );
             subscriber.error(commandValidation.error);
             return;
           }
+          currentState.log(
+            `${command.toString()} valid`,
+            LogLevel.AFTER_VALIDATION,
+          );
 
+          currentState.log(command.toString(), LogLevel.BEFORE_COMMAND);
           command.execute(currentState);
+          currentState.log(command.toString(), LogLevel.BEFORE_COMMAND);
         });
 
         subscriber.next();

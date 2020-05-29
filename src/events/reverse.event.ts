@@ -1,4 +1,4 @@
-import { Player } from "../models/player.model";
+import { IPlayer } from "../models/player.model";
 
 /**
  * Event that fires when the direction is changed by revert card
@@ -9,5 +9,5 @@ export class ReverseEvent {
    *
    * @param player Next player
    */
-  constructor(public readonly player: Player) {}
+  constructor(public readonly player: IPlayer) {}
 }

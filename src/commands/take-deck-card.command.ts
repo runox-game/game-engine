@@ -4,6 +4,7 @@ import { CommandValidation } from './command-result';
 import { IPlayer } from '../models/player.model';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 import { ICard } from '../models/card.model';
+import { LogLevel } from '../log/log-levels.enum';
 
 /**
  * Class that allows the current player to take a card from the deck
@@ -26,6 +27,12 @@ export class TakeDeckCardCommand extends GameCommand {
     } else {
       newCards = state.giveCards(1, currentPlayer);
     }
+    state.log(
+      `${currentPlayer.name} toma las cartas ${newCards
+        .map((x) => x.sprite)
+        .join(', ')}`,
+      LogLevel.USER,
+    );
 
     this.events.dispatchAfterTakeCards(
       new AfterTakeCardsEvent(newCards, currentPlayer),
@@ -44,8 +51,15 @@ export class TakeDeckCardCommand extends GameCommand {
         !state.unoYellers[player.id],
     );
 
+    state.log(
+      `${playersWhoShouldHaveYelled
+        .map((x) => x.name)
+        .join(', ')} deberían haber cantado UNO`,
+      LogLevel.ALL,
+    );
     playersWhoShouldHaveYelled.forEach((player) => {
       const newCards = state.giveCards(2, player);
+      state.log(`${player.name} toma dos cartas`, LogLevel.ALL);
 
       this.events.dispatchAfterTakeCards(
         new AfterTakeCardsEvent(newCards, player),

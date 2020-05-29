@@ -7,6 +7,8 @@ import { ICard } from './models/card.model';
 import { GameModes } from './models/game-modes';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { ILog } from './log/log.factory';
+import { LogLevel } from './log/log-levels.enum';
 
 export class GameEngine {
   private readonly state: IGameState;
@@ -100,6 +102,10 @@ export class GameEngine {
 
   overrideInternalState(externalState: IGameState) {
     this.state.overrideInternalState(externalState);
+  }
+
+  logs(): Observable<ILog> {
+    return this.state.logs(LogLevel.ALL);
   }
 
   private handleError(): (

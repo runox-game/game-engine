@@ -9,8 +9,12 @@ import { GameEvents } from '../events/game-events';
 import { Value } from './values.model';
 import { GameModes } from './game-modes';
 import { Color } from './color.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { ILog, LogFactory, ILogger } from '../log/log.factory';
+import { LogLevel } from '../log/log-levels.enum';
+import { filter } from 'rxjs/operators';
 
-export interface IGameState {
+export interface IGameState extends ILogger {
   id: number;
   readonly deck: IDeck;
   readonly stack: IStack;
@@ -48,6 +52,7 @@ export class GameState implements IGameState {
   gameModes: GameModes;
   winner: IPlayer | undefined;
   winnerScore: number;
+  log$: BehaviorSubject<ILog>;
 
   constructor() {
     this.id = new Date().getTime();
@@ -65,6 +70,7 @@ export class GameState implements IGameState {
     };
     this.winner = undefined;
     this.winnerScore = 0;
+    this.log$ = new BehaviorSubject<ILog>(LogFactory.default());
   }
 
   get nextPlayerToPlay() {
@@ -193,5 +199,27 @@ export class GameState implements IGameState {
     }
     this.winner = player;
     this.winnerScore = score;
+  }
+
+  /**
+   * Log message in the state with a level asigned.
+   *
+   * @remarks
+   * If levels is undefined will be assigned LogLevel.DEFAULT
+   *
+   * @param state
+   * @param message
+   * @param level
+   */
+  log(message: string, level?: LogLevel) {
+    this.log$.next({ level: level ?? LogLevel.DEFAULT, mesagge: message });
+  }
+
+  /**
+   * Return an observable with a flow of logs filtered by level
+   * @param level
+   */
+  logs(level: LogLevel): Observable<ILog> {
+    return this.log$.asObservable().pipe(filter((x) => x.level === level));
   }
 }
