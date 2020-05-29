@@ -35,6 +35,7 @@ export interface IGameState extends ILogger {
   addStackCardsToDeck(): void;
   overrideInternalState(state: IGameState): void;
   setWinner(player: IPlayer, score: number): void;
+  getPlayersWhoShouldHaveYelled(): IPlayer[];
 }
 
 /** Clase que representa el estado del juego */
@@ -221,5 +222,17 @@ export class GameState implements IGameState {
    */
   logs(level: LogLevel): Observable<ILog> {
     return this.log$.asObservable().pipe(filter((x) => x.level === level));
+  }
+
+  /**
+   * Find and return users who should yell uno
+   */
+  getPlayersWhoShouldHaveYelled(): IPlayer[] {
+    return this.playersGroup.players.filter(
+      (player) =>
+        player.id !== this.turn.player?.id &&
+        player.hand.cards.length === 1 &&
+        !this.unoYellers[player.id],
+    );
   }
 }
