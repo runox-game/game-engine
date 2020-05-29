@@ -34,6 +34,15 @@ export class StartGameCommand extends GameCommand {
       LogLevel.ALL,
     );
 
+    state.log(` Orden aleatorio a los jugadores`, LogLevel.USER);
+    state.playersGroup.shufflePlayers();
+    state.log(
+      `El orden de los jugadores es: ${state.playersGroup.players
+        .map((x) => x.name)
+        .join(', ')}`,
+      LogLevel.USER,
+    );
+
     state.log(` Repartiendo cartas`, LogLevel.USER);
     state.playersGroup.players.forEach((player, index) => {
       player.hand.addCards(
