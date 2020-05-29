@@ -34,8 +34,11 @@ describe('StartGameCommand', () => {
     const hand2Spy = spyOn(player2.hand, 'addCards').and.callThrough();
     const hand3Spy = spyOn(player3.hand, 'addCards').and.callThrough();
     const hand4Spy = spyOn(player4.hand, 'addCards').and.callThrough();
+    const playersGroupSpy = spyOn(state.playersGroup, 'shufflePlayers').and.callThrough();
 
     command.execute(state);
+
+    const firstPlayer = state.playersGroup.players[0];
 
     expect(turnSpy).toBeCalled();
     expect(deckSpy).toBeCalled();
@@ -44,7 +47,8 @@ describe('StartGameCommand', () => {
     expect(hand2Spy).toBeCalled();
     expect(hand3Spy).toBeCalled();
     expect(hand4Spy).toBeCalled();
-    expect(state.turn.player).toEqual(player1);
+    expect(playersGroupSpy).toBeCalled();
+    expect(state.turn.player).toEqual(firstPlayer);
     expect(state.stack.cards.length).toBe(1);
     expect(state.stack.cardOnTop).not.toBeUndefined();
   });
