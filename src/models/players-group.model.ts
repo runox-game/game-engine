@@ -6,6 +6,7 @@ export interface IPlayersGroup {
   addPlayer(player: IPlayer): void;
   addPlayers(players: IPlayer[]): void;
   getPlayerById(playerId: string): IPlayer;
+  shufflePlayers(): void;
 }
 
 export class PlayersGroup implements IPlayersGroup {
@@ -15,15 +16,26 @@ export class PlayersGroup implements IPlayersGroup {
     this.players = [];
   }
 
-  addPlayer(player: IPlayer) {
+  addPlayer(player: IPlayer): void {
     this.players.push(player);
   }
 
-  addPlayers(players: IPlayer[]) {
+  addPlayers(players: IPlayer[]): void {
     this.players.push(...players);
   }
 
-  getPlayerById(playerId: string) {
+  /**
+   * Randomize order of players
+   */
+  shufflePlayers(): void {
+    this.players.sort(() => Math.random() - 0.5);
+  }
+
+  /**
+   * Find Player by id
+   * @param playerId
+   */
+  getPlayerById(playerId: string): IPlayer {
     const player = this.players.find((player) => player.id === playerId);
 
     if (!player) {
