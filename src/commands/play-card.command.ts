@@ -96,6 +96,7 @@ export class PlayCardCommand extends GameCommand {
         state.turn.setPlayerTurn(state.nextPlayerToPlay);
       } else {
         state.log(` Se está jugando con +4s`, LogLevel.USER);
+
         const toPlayer = state.playersGroup.getPlayerById(
           this.toPlayerId as string,
         );
