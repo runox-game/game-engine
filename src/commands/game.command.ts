@@ -44,7 +44,7 @@ export abstract class GameCommand {
 
   /**
    * Punish those who did not yell UNO
-   * @param state 
+   * @param state
    */
   protected checkForPlayersWhoShouldHaveYelledUno(state: IGameState) {
     const playersWhoShouldHaveYelled = state.getPlayersWhoShouldHaveYelled();
