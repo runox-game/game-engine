@@ -2,6 +2,7 @@ import { IGameState } from '../models/game-state.model';
 import { CommandValidation } from './command-result';
 import { GameEvents } from '../events/game-events';
 import { LogLevel } from '../log/log-levels.enum';
+import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 
 /**
  * Abstract class that serves as the basis for all game engine commands
@@ -39,5 +40,29 @@ export abstract class GameCommand {
 
   public toString() {
     return this.constructor?.name;
+  }
+
+  /**
+   * Punish those who did not yell UNO
+   * @param state 
+   */
+  protected checkForPlayersWhoShouldHaveYelledUno(state: IGameState) {
+    const playersWhoShouldHaveYelled = state.getPlayersWhoShouldHaveYelled();
+
+    state.log(
+      `${playersWhoShouldHaveYelled
+        .map((x) => x.name)
+        .join(', ')} deberían haber cantado UNO`,
+      LogLevel.ALL,
+    );
+
+    playersWhoShouldHaveYelled.forEach((player) => {
+      const newCards = state.giveCards(2, player);
+      state.log(`${player.name} toma dos cartas`, LogLevel.ALL);
+
+      this.events.dispatchAfterTakeCards(
+        new AfterTakeCardsEvent(newCards, player),
+      );
+    });
   }
 }
