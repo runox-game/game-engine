@@ -19,6 +19,19 @@ describe('PlayersGroup', () => {
     expect(playersGroup.players.length).toBe(1);
   });
 
+  it('should remove a player when removePlayer method is called', () => {
+    const playersGroup = new PlayersGroup();
+
+    const player1 = new Player('p1', 'player 1', 'avatar');
+    const player2 = new Player('p2', 'player 2', 'avatar');
+
+    playersGroup.addPlayers([player1, player2]);
+
+    playersGroup.removePlayer(player1);
+
+    expect(playersGroup.players.length).toBe(1);
+  });
+
   it('should add multiple players when addPlayers method is called', () => {
     const playersGroup = new PlayersGroup();
 
