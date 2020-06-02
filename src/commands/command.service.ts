@@ -11,6 +11,7 @@ import { YellUnoCommand } from './yell-uno.command';
 import { ICard } from '../models/card.model';
 import { GameModes } from '../models/game-modes';
 import { Observable } from 'rxjs';
+import { RemovePlayerCommand } from './remove-player.command';
 
 /**
  * Class that serves as an entry point for invoking commands within the game
@@ -48,6 +49,20 @@ export class CommandService {
    */
   addPlayers(currentState: IGameState, players: IPlayer[]): Observable<void> {
     const invoker = new CommandsInvoker([new AddPlayersCommand(players)]);
+
+    return invoker.invoke(currentState);
+  }
+
+  /**
+   * Invokes the necessary commands to remove a player from the game
+   *
+   * @param currentState - current game state
+   * @param player - player to remove from the game
+   * @returns observable with the intention of being able to track the success or failure
+   * of the command group invocation
+   */
+  removePlayer(currentState: IGameState, player: IPlayer): Observable<void> {
+    const invoker = new CommandsInvoker([new RemovePlayerCommand(player)]);
 
     return invoker.invoke(currentState);
   }

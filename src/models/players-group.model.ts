@@ -5,6 +5,7 @@ export interface IPlayersGroup {
 
   addPlayer(player: IPlayer): void;
   addPlayers(players: IPlayer[]): void;
+  removePlayer(player: IPlayer): void;
   getPlayerById(playerId: string): IPlayer;
   shufflePlayers(): void;
 }
@@ -22,6 +23,10 @@ export class PlayersGroup implements IPlayersGroup {
 
   addPlayers(players: IPlayer[]): void {
     this.players.push(...players);
+  }
+
+  removePlayer(player: IPlayer): void {
+    this.players = this.players.filter((x) => x.id === player.id);
   }
 
   /**
