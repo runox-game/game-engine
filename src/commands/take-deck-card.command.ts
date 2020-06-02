@@ -5,6 +5,7 @@ import { IPlayer } from '../models/player.model';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 import { ICard } from '../models/card.model';
 import { LogLevel } from '../log/log-levels.enum';
+import { randomizeInteger } from '../utils/random';
 
 /**
  * Class that allows the current player to take a card from the deck
@@ -23,7 +24,7 @@ export class TakeDeckCardCommand extends GameCommand {
     let newCards: ICard[];
 
     if (state.gameModes.randomTakeDeckCard) {
-      newCards = state.giveCards(this.randomizeInteger(1, 5), currentPlayer);
+      newCards = state.giveCards(randomizeInteger(1, 5), currentPlayer);
     } else {
       newCards = state.giveCards(1, currentPlayer);
     }
@@ -53,21 +54,5 @@ export class TakeDeckCardCommand extends GameCommand {
     }
 
     return new CommandValidation(true);
-  }
-
-  private randomizeInteger(min: number, max: number) {
-    if (max === null) {
-      max = min === null ? Number.MAX_SAFE_INTEGER : min;
-      min = 1;
-    }
-
-    min = Math.ceil(min); // inclusive min
-    max = Math.floor(max); // exclusive max
-
-    if (min > max - 1) {
-      throw new Error('Incorrect arguments.');
-    }
-
-    return min + Math.floor((max - min) * Math.random());
   }
 }
