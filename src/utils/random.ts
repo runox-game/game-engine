@@ -1,5 +1,5 @@
 /**
- * Return a random integer between min an max values. 
+ * Return a random integer between min an max values.
  * Include min value but exclude max value
  * @param min min value
  * @param max max value
