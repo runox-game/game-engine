@@ -72,6 +72,12 @@ export class GameEngine {
       .pipe(catchError(this.handleError()));
   }
 
+  reset(gameModes?: GameModes): Observable<void> {
+    return this.commandService
+      .resetGame(this.state, gameModes)
+      .pipe(catchError(this.handleError()));
+  }
+
   join(players: IPlayer[]): Observable<void> {
     return this.commandService
       .addPlayers(this.state, players)
