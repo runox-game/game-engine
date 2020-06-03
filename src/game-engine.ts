@@ -78,6 +78,12 @@ export class GameEngine {
       .pipe(catchError(this.handleError()));
   }
 
+  remove(player: IPlayer): Observable<void> {
+    return this.commandService
+      .removePlayer(this.state, player)
+      .pipe(catchError(this.handleError()));
+  }
+
   playCard(
     playerId: string,
     card: ICard,

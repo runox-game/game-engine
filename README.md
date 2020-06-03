@@ -29,6 +29,13 @@ const user: Player;
 game.join([user]).subscribe();
 ```
 
+- remove
+
+```[typescript]
+const user: Player;
+game.remove(user).subscribe();
+```
+
 - playCard
 
 ```[typescript]
