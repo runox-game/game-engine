@@ -5,6 +5,7 @@ import { CommandValidation } from './command-result';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
 import { AfterYellUnoEvent } from '../events/after-yell-uno.event';
 import { LogLevel } from '../log/log-levels.enum';
+import { Constants } from '../constants';
 
 /**
  * Class that allows a player to yell Uno
@@ -53,7 +54,10 @@ export class YellUnoCommand extends GameCommand {
       // si tiene mas de 2 cartas o ya habia gritado entonces debemos validar que no haya mentido
 
       if (yeller.hand.cards.length > 2) {
-        const newCards = state.giveCards(2, yeller);
+        const newCards = state.giveCards(
+          Constants.PENALITY_FOR_YELL_UNO,
+          yeller,
+        );
 
         state.log(
           `${yeller.name} toma dos cartas por cantar UNO cuando no debía`,

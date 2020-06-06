@@ -5,6 +5,7 @@ import { CommandValidation } from './command-result';
 import { BeforeTurnEvent } from '../events/before-turn.event';
 import { GameModes } from '../models/game-modes';
 import { LogLevel } from '../log/log-levels.enum';
+import { Constants } from '../constants';
 
 /**
  * Class that allows the game to start
@@ -25,7 +26,7 @@ export class StartGameCommand extends GameCommand {
   }
 
   execute(state: IGameState) {
-    const handsLength = 7;
+    const handsLength = Constants.NUMBER_OF_CARD_IN_HAND_ON_START;
 
     state.gameModes = this.gameModes;
     state.log(` Comienza el juego`, LogLevel.USER);
