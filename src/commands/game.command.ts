@@ -3,6 +3,7 @@ import { CommandValidation } from './command-result';
 import { GameEvents } from '../events/game-events';
 import { LogLevel } from '../log/log-levels.enum';
 import { AfterTakeCardsEvent } from '../events/after-take-cards.event';
+import { Constants } from '../constants';
 
 /**
  * Abstract class that serves as the basis for all game engine commands
@@ -57,7 +58,10 @@ export abstract class GameCommand {
     );
 
     playersWhoShouldHaveYelled.forEach((player) => {
-      const newCards = state.giveCards(2, player);
+      const newCards = state.giveCards(
+        Constants.COUNT_CARD_TO_TAKE_WHO_SHOULD_YELL_UNO,
+        player,
+      );
       state.log(`${player.name} toma dos cartas`, LogLevel.ALL);
 
       this.events.dispatchAfterTakeCards(
