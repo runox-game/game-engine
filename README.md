@@ -48,41 +48,36 @@ game.start().subscribe(
 - join
 
 ```[typescript]
-const user: Player;
 game.join([user]).subscribe();
 ```
 
 - remove
 
 ```[typescript]
-const user: Player;
 game.remove(user).subscribe();
 ```
 
 - playCard
 
 ```[typescript]
-const card: ICard;
 game.playCard(game.playerTurn?.id, card).subscribe();
 ```
 
 - takeCard
 
 ```[typescript]
-game.takeCard()
+game.takeCard();
 ```
 
 - uno
 
 ```[typescript]
-const user: Player;
-game.uno(user.id)
+game.uno(user.id);
 ```
 
 - overrideInternalState
 
 ```[typescript]
-const state = IGameState;
 game.overrideInternalState(_data);
 ```
 
