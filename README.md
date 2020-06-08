@@ -11,10 +11,33 @@ const game = new GameEngine();
 - start
 
 ```[typescript]
+game.start().subscribe(
+  () => {},
+  (error: string) => {
+    // handle error
+  }
+);
+```
+
+Also, you can use different game modes passing a GameModes object as parameter (by default all game modes are deactivated)
+
+```[typescript]
 const gameModes: GameModes = {
   randomTakeDeckCard: false,
+  cumulativePlusTwo: false,
+  dedicatePlusFour: false
 };
+
 game.start(gameModes).subscribe(
+  () => {},
+  (error: string) => {
+    // handle error
+  }
+);
+```
+
+```[typescript]
+game.start().subscribe(
   () => {},
   (error: string) => {
     // handle error
