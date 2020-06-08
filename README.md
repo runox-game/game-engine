@@ -3,7 +3,7 @@
 # Example
 
 ```[typescript]
-const game = GameEngine.getInstance();
+const game = new GameEngine();
 ```
 
 # Methods of GameEngine
