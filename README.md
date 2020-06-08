@@ -17,7 +17,7 @@ const gameModes: GameModes = {
 game.start(gameModes).subscribe(
   () => {},
   (error: string) => {
-    showErrorAlert(error);
+    // handle error
   }
 );
 ```
