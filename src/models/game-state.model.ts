@@ -107,14 +107,6 @@ export class GameState implements IGameState {
   }
 
   giveCards(quantity: number, toPlayer: IPlayer) {
-    // numero de cartas disponibles entre mazo y pila
-    const availableCards =
-      this.deck.cards.length + (this.stack.cards.length - 1);
-
-    while (quantity > availableCards) {
-      throw new Error('No se puede dar más cartas que las jugables');
-    }
-
     if (quantity > this.deck.cards.length) {
       this.addStackCardsToDeck();
     }
@@ -132,7 +124,7 @@ export class GameState implements IGameState {
 
   addStackCardsToDeck() {
     const newDeckCards = this.stack.cards.filter(
-      (card) => card.id === this.stack.cardOnTop?.id,
+      (card) => card.id !== this.stack.cardOnTop?.id,
     );
 
     this.deck.addCards(newDeckCards);
