@@ -40,6 +40,23 @@ export class CommandService {
   }
 
   /**
+   * Invokes the necessary commands to reset the game
+   *
+   * @param currentState - current game state
+   * @param gameModes - different game modes
+   * @returns observable with the intention of being able to track the success or failure
+   * of the command group invocation
+   */
+  resetGame(currentState: IGameState, gameModes?: GameModes): Observable<void> {
+    const invoker = new CommandsInvoker([
+      new BuildDeckCommand(),
+      new StartGameCommand(gameModes),
+    ]);
+
+    return invoker.invoke(currentState);
+  }
+
+  /**
    * Invokes the necessary commands to add players to the game
    *
    * @param currentState - current game state
