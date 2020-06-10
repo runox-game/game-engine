@@ -45,6 +45,17 @@ game.start().subscribe(
 );
 ```
 
+- reset
+
+```[typescript]
+game.reset().subscribe(
+  () => {},
+  (error: string) => {
+    showErrorAlert(error);
+  }
+);
+```
+
 - join
 
 ```[typescript]
