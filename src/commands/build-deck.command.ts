@@ -18,6 +18,8 @@ export class BuildDeckCommand extends GameCommand {
   }
 
   execute(state: IGameState) {
+    state.deck.cards = [];
+
     state.log(`Construyendo tablero`, LogLevel.USER);
     /*
       Traditional deck contains:

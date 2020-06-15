@@ -67,11 +67,16 @@ export class StartGameCommand extends GameCommand {
 
       state.deck.addCards([firstStackCard]);
 
-      state.log(` Barajando`, LogLevel.USER);
+      state.log(`Barajando`, LogLevel.USER);
       state.deck.shuffle();
 
       firstStackCard = state.deck.takeCard() as ICard;
     }
+
+    state.stack.cards = [];
+    state.playersGroup.players.forEach((player) => {
+      player.hand.cards = [];
+    });
 
     state.stack.addCard(firstStackCard);
     state.log(` Carta en la mesa ${firstStackCard.sprite}`, LogLevel.USER);

@@ -71,7 +71,7 @@ export class YellUnoCommand extends GameCommand {
   }
 
   validate(state: IGameState) {
-    if (!state.winner) {
+    if (!!state.winner) {
       return new CommandValidation(false, 'Runox ya terminó');
     }
 
