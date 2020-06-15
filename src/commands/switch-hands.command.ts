@@ -41,7 +41,7 @@ export class SwitchHandsCommand extends GameCommand {
       )}`,
       LogLevel.ALL,
     );
-    
+
     this.player1.hand.cards = cards2;
     this.player2.hand.cards = cards1;
 

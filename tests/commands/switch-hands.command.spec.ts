@@ -11,19 +11,19 @@ describe('SwitchHandsCommand', () => {
 
     player1.hand.addCard(new Card(Value.PLUS_FOUR));
     player2.hand.addCard(new Card(Value.PLUS_TWO));
-    
+
     const command = new SwitchHandsCommand(player1, player2);
     const state = new GameState();
-    
+
     command.execute(state);
-    
+
     expect(player1.hand.cards.length).toBe(1);
     expect(player2.hand.cards.length).toBe(1);
 
-    expect(player1.hand.hasCard(Value.PLUS_FOUR)).toBe(false)
-    expect(player1.hand.hasCard(Value.PLUS_TWO)).toBe(true)
-    
-    expect(player2.hand.hasCard(Value.PLUS_FOUR)).toBe(true)
-    expect(player2.hand.hasCard(Value.PLUS_TWO)).toBe(false)
+    expect(player1.hand.hasCard(Value.PLUS_FOUR)).toBe(false);
+    expect(player1.hand.hasCard(Value.PLUS_TWO)).toBe(true);
+
+    expect(player2.hand.hasCard(Value.PLUS_FOUR)).toBe(true);
+    expect(player2.hand.hasCard(Value.PLUS_TWO)).toBe(false);
   });
 });
