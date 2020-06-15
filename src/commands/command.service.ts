@@ -13,6 +13,7 @@ import { GameModes } from '../models/game-modes';
 import { Observable } from 'rxjs';
 import { RemovePlayerCommand } from './remove-player.command';
 import { TakeCardRandomPlayerCommand } from './take-card-random-player.command';
+import { SwitchHandsCommand } from './switch-hands.command';
 
 /**
  * Class that serves as an entry point for invoking commands within the game
@@ -148,6 +149,24 @@ export class CommandService {
    */
   yellUno(currentState: IGameState, yellerId?: string): Observable<void> {
     const invoker = new CommandsInvoker([new YellUnoCommand(yellerId)]);
+
+    return invoker.invoke(currentState);
+  }
+
+  /**
+   *  Invokes the necessary commands to switch ahdnhands between players
+   * @param currentState  - current game state
+   * @param player1 - player to switch his hand
+   * @param player2 - player to switch his hand
+   */
+  switchHands(
+    currentState: IGameState,
+    player1: IPlayer,
+    player2: IPlayer,
+  ): Observable<void> {
+    const invoker = new CommandsInvoker([
+      new SwitchHandsCommand(player1, player2),
+    ]);
 
     return invoker.invoke(currentState);
   }

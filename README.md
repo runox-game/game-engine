@@ -104,6 +104,12 @@ game.takeCardToRandomPlayer();
 game.uno(user.id);
 ```
 
+- switchHands
+
+```[typescript]
+game.switchHands(player1, player2);
+```
+
 - overrideInternalState
 
 ```[typescript]

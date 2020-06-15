@@ -118,6 +118,12 @@ export class GameEngine {
       .pipe(catchError(this.handleError()));
   }
 
+  switchHands(player1: IPlayer, player2: IPlayer): Observable<void> {
+    return this.commandService
+      .switchHands(this.state, player1, player2)
+      .pipe(catchError(this.handleError()));
+  }
+
   overrideInternalState(externalState: IGameState) {
     this.state.overrideInternalState(externalState);
   }
