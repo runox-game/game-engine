@@ -60,6 +60,10 @@ export class SwitchHandsCommand extends GameCommand {
   }
 
   validate(state: IGameState) {
+    if (!state.gameModes.crazyCommands) {
+      return new CommandValidation(false, 'Modo Crazy no está permitido');
+    }
+
     if (!this.player1 || !this.player1) {
       return new CommandValidation(
         false,
