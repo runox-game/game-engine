@@ -12,6 +12,7 @@ import { ICard } from '../models/card.model';
 import { GameModes } from '../models/game-modes';
 import { Observable } from 'rxjs';
 import { RemovePlayerCommand } from './remove-player.command';
+import { TakeCardRandomPlayerCommand } from './take-card-random-player.command';
 
 /**
  * Class that serves as an entry point for invoking commands within the game
@@ -120,6 +121,19 @@ export class CommandService {
       new TakeDeckCardCommand(),
       new FinalizeTurnCommand(),
     ]);
+
+    return invoker.invoke(currentState);
+  }
+
+  /**
+   * Invokes the necessary commands to take a card from the deck and assign it to a random player
+   *
+   * @param currentState - current game state
+   * @returns observable with the intention of being able to track the success or failure
+   * of the command group invocation
+   */
+  takeCardToRandomPlayer(currentState: IGameState): Observable<void> {
+    const invoker = new CommandsInvoker([new TakeCardRandomPlayerCommand()]);
 
     return invoker.invoke(currentState);
   }
