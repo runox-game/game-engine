@@ -13,7 +13,7 @@
     "prepare": "npm run build",
     "prepublish": "npm test && npm run lint",
     "publish:patch": "tsc && npm version patch && npm publish --access public",
-    "publish:pack": "tsc && npm version patch && npm pack"
+    "publish:pack": "tsc && npm pack"
   },
   "files": [
     "lib/**/*"
