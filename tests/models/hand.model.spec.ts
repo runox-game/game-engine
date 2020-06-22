@@ -42,6 +42,16 @@ describe('Hand', () => {
     ).toThrowError();
   });
 
+  it('should remove multiple cards when removeCards method is called', () => {
+    const hand = new Hand();
+    const cards = [new Card(Value.PLUS_FOUR), new Card(Value.WILDCARD)];
+
+    hand.addCards(cards);
+    hand.removeCards(cards);
+
+    expect(hand.cards.length).toBe(0);
+  });
+
   it('should remove a card from the hand when we invoke removeCard with a valid cardId', () => {
     const hand = new Hand();
     const card1 = new Card(Value.PLUS_FOUR);

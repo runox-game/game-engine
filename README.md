@@ -25,7 +25,8 @@ Also, you can use different game modes passing a GameModes object as parameter (
 const gameModes: GameModes = {
   randomTakeDeckCard: false,
   cumulativePlusTwo: false,
-  dedicatePlusFour: false
+  dedicatePlusFour: false,
+  crazyCommands: false,
 };
 
 game.start(gameModes).subscribe(
@@ -41,6 +42,17 @@ game.start().subscribe(
   () => {},
   (error: string) => {
     // handle error
+  }
+);
+```
+
+- reset
+
+```[typescript]
+game.reset().subscribe(
+  () => {},
+  (error: string) => {
+    showErrorAlert(error);
   }
 );
 ```
@@ -80,10 +92,22 @@ game.playCard(game.playerTurn?.id, card).subscribe();
 game.takeCard();
 ```
 
+- takeCardToRandomPlayer
+
+```[typescript]
+game.takeCardToRandomPlayer();
+```
+
 - uno
 
 ```[typescript]
 game.uno(user.id);
+```
+
+- switchHands
+
+```[typescript]
+game.switchHands(player1, player2);
 ```
 
 - overrideInternalState

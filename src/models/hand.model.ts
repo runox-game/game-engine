@@ -10,6 +10,7 @@ export interface IHand {
   addCard(card: ICard): void;
   addCards(cards: ICard[]): void;
   removeCard(card: ICard): void;
+  removeCards(cards: ICard[]): void;
   hasCard(value: Value, color?: Color): boolean;
 }
 
@@ -50,6 +51,12 @@ export class Hand implements IHand {
     }
 
     this.cards.splice(cardIndex, 1);
+  }
+
+  removeCards(cards: ICard[]): void {
+    for (let i = 0; i < cards.length; i++) {
+      this.removeCard(cards[i]);
+    }
   }
 
   hasCard(value: Value, color?: Color) {

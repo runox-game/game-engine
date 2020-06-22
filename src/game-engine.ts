@@ -106,9 +106,21 @@ export class GameEngine {
       .pipe(catchError(this.handleError()));
   }
 
+  takeCardToRandomPlayer(): Observable<void> {
+    return this.commandService
+      .takeCardToRandomPlayer(this.state)
+      .pipe(catchError(this.handleError()));
+  }
+
   uno(yellerId?: string): Observable<void> {
     return this.commandService
       .yellUno(this.state, yellerId)
+      .pipe(catchError(this.handleError()));
+  }
+
+  switchHands(player1: IPlayer, player2: IPlayer): Observable<void> {
+    return this.commandService
+      .switchHands(this.state, player1, player2)
       .pipe(catchError(this.handleError()));
   }
 
