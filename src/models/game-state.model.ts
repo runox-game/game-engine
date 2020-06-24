@@ -36,6 +36,8 @@ export interface IGameState extends ILogger {
   overrideInternalState(state: IGameState): void;
   setWinner(player: IPlayer, score: number): void;
   getPlayersWhoShouldHaveYelled(): IPlayer[];
+  onSpecialCardPlayed(): Observable<ICard>;
+  onCardPlayed(): Observable<ICard>;
 }
 
 /** Clase que representa el estado del juego */
@@ -214,6 +216,20 @@ export class GameState implements IGameState {
    */
   logs(level: LogLevel): Observable<ILog> {
     return this.log$.asObservable().pipe(filter((x) => x.level === level));
+  }
+
+  /**
+   * Return an observable with a special card has played
+   */
+  onSpecialCardPlayed(): Observable<ICard> {
+    return this.events.specialCard$;
+  }
+
+  /**
+   * Return an observable with a common card has played
+   */
+  onCardPlayed(): Observable<ICard> {
+    return this.events.cardplayed$;
   }
 
   /**

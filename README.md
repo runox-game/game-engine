@@ -118,8 +118,28 @@ game.overrideInternalState(_data);
 
 - logs
 
+LogLevel.ALL
+LogLevel.USER
+LogLevel.BEFORE_COMMAND
+LogLevel.AFTER_COMMAND
+LogLevel.BEFORE_VALIDATION
+LogLevel.AFTER_VALIDATION
+
 ```[typescript]
-game.logs().subscribe((log: ILog) => {
+game.logs(LogLevel.USER).subscribe((log: ILog) => {
   console.log(log);
 });
+```
+
+- onSpecialCardPlayed
+  Special for play special sound
+
+```[typescript]
+game.onSpecialCardPlayed();
+```
+
+- onCardPlayed
+
+```[typescript]
+game.onSpecialCardPlayed();
 ```

@@ -33,6 +33,7 @@ export class GameEngine {
       [GameEvent.SKIP]: this.gameEvents.skip$,
       [GameEvent.REVERSE]: this.gameEvents.reverse$,
       [GameEvent.ERROR]: this.gameEvents.error$,
+      [GameEvent.SPECIAL_CARD]: this.gameEvents.specialCard$,
     };
   }
 
@@ -128,8 +129,16 @@ export class GameEngine {
     this.state.overrideInternalState(externalState);
   }
 
-  logs(): Observable<ILog> {
-    return this.state.logs(LogLevel.ALL);
+  logs(level: LogLevel = LogLevel.USER): Observable<ILog> {
+    return this.state.logs(level);
+  }
+
+  onSpecialCardPlayed(): Observable<ICard> {
+    return this.state.onSpecialCardPlayed();
+  }
+
+  onCardPlayed(): Observable<ICard> {
+    return this.state.onCardPlayed();
   }
 
   private handleError(): (

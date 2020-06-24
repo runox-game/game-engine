@@ -8,6 +8,7 @@ import { AfterYellUnoEvent } from './after-yell-uno.event';
 import { ChangeColorEvent } from './color-change.event';
 import { SkipEvent } from './skip.event';
 import { ReverseEvent } from './reverse.event';
+import { ICard } from '../models/card.model';
 
 /**
  * Game event utility class
@@ -26,6 +27,8 @@ export class GameEvents {
     [GameEvent.SKIP]: new Subject<SkipEvent>(),
     [GameEvent.REVERSE]: new Subject<ReverseEvent>(),
     [GameEvent.ERROR]: new Subject<any>(),
+    [GameEvent.SPECIAL_CARD]: new Subject<ICard>(),
+    [GameEvent.CARD_PLAYED]: new Subject<ICard>(),
   };
 
   private constructor() {}
@@ -109,6 +112,20 @@ export class GameEvents {
    */
   get error$() {
     return this.events[GameEvent.ERROR].asObservable();
+  }
+
+  /**
+   * Observable that emits values when a special card has dropped
+   */
+  get specialCard$() {
+    return this.events[GameEvent.SPECIAL_CARD].asObservable();
+  }
+
+  /**
+   * Observable that emits values when a common card has dropped
+   */
+  get cardplayed$() {
+    return this.events[GameEvent.CARD_PLAYED].asObservable();
   }
 
   /**
@@ -198,4 +215,23 @@ export class GameEvents {
   dispatchError(error: any): any {
     return this.events[GameEvent.ERROR].next(error);
   }
+
+  /**
+   * Emits card when was played a special card
+   *
+   * @param card special card
+   */
+  dispatchSpecialCard(card: ICard): any {
+    return this.events[GameEvent.SPECIAL_CARD].next(card);
+  }
+
+  /**
+   * Emits card when a card was played (not specials cards)
+   *
+   * @param card
+   */
+  dispatchCardPlayed(card: ICard): any {
+    return this.events[GameEvent.CARD_PLAYED].next(card);
+  }
+
 }
