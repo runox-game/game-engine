@@ -34,6 +34,7 @@ export class GameEngine {
       [GameEvent.REVERSE]: this.gameEvents.reverse$,
       [GameEvent.ERROR]: this.gameEvents.error$,
       [GameEvent.SPECIAL_CARD]: this.gameEvents.specialCard$,
+      [GameEvent.STATE_CHANGED]: this.gameEvents.stateChanged$,
     };
   }
 

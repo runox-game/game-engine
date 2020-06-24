@@ -14,4 +14,5 @@ export enum GameEvent {
   ERROR = "error",
   SPECIAL_CARD = "specialCard",
   CARD_PLAYED = "cardplayed",
+  STATE_CHANGED = "stateChanged",
 }

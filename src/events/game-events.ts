@@ -9,6 +9,7 @@ import { ChangeColorEvent } from './color-change.event';
 import { SkipEvent } from './skip.event';
 import { ReverseEvent } from './reverse.event';
 import { ICard } from '../models/card.model';
+import { IGameState } from '../models/game-state.model';
 
 /**
  * Game event utility class
@@ -29,6 +30,7 @@ export class GameEvents {
     [GameEvent.ERROR]: new Subject<any>(),
     [GameEvent.SPECIAL_CARD]: new Subject<ICard>(),
     [GameEvent.CARD_PLAYED]: new Subject<ICard>(),
+    [GameEvent.STATE_CHANGED]: new Subject<IGameState>(),
   };
 
   private constructor() {}
@@ -234,4 +236,11 @@ export class GameEvents {
     return this.events[GameEvent.CARD_PLAYED].next(card);
   }
 
+  /**
+   * Emits state when it was changed
+   * @param state GameState
+   */
+  dispatchStateChanged(state: IGameState) {
+    return this.events[GameEvent.STATE_CHANGED].next(state);
+  }
 }
