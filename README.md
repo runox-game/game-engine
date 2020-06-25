@@ -135,17 +135,23 @@ game.logs(LogLevel.USER).subscribe((log: ILog) => {
   Special for play special sound
 
 ```[typescript]
-game.onSpecialCardPlayed();
+game.onSpecialCardPlayed().subscribe((card: ICard) => {
+  console.log(card);
+});
 ```
 
 - onCardPlayed
 
 ```[typescript]
-game.onCardPlayed();
+game.onCardPlayed().subscribe((card: ICard) => {
+  console.log(card);
+});
 ```
 
 - onStateChanged
 
 ```[typescript]
-game.onStateChanged();
+game.onStateChanged().subscribe((state: IGameState) => {
+  console.log(state);
+});
 ```
