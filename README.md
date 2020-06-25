@@ -141,5 +141,11 @@ game.onSpecialCardPlayed();
 - onCardPlayed
 
 ```[typescript]
-game.onSpecialCardPlayed();
+game.onCardPlayed();
+```
+
+- onStateChanged
+
+```[typescript]
+game.onStateChanged();
 ```

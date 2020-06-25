@@ -142,6 +142,10 @@ export class GameEngine {
     return this.state.onCardPlayed();
   }
 
+  onStateChanged(): Observable<IGameState> {
+    return this.state.onStateChanged();
+  }
+
   private handleError(): (
     err: any,
     caught: Observable<void>,

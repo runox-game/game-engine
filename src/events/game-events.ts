@@ -131,6 +131,13 @@ export class GameEvents {
   }
 
   /**
+   * Observable that emits values when a common card has dropped
+   */
+  get stateChanged$() {
+    return this.events[GameEvent.STATE_CHANGED].asObservable();
+  }
+
+  /**
    * Emits value in the observable at the beginning of the game
    */
   dispatchAfterGameStart() {

@@ -38,6 +38,7 @@ export interface IGameState extends ILogger {
   getPlayersWhoShouldHaveYelled(): IPlayer[];
   onSpecialCardPlayed(): Observable<ICard>;
   onCardPlayed(): Observable<ICard>;
+  onStateChanged(): Observable<IGameState>;
 }
 
 /** Clase que representa el estado del juego */
@@ -230,6 +231,13 @@ export class GameState implements IGameState {
    */
   onCardPlayed(): Observable<ICard> {
     return this.events.cardplayed$;
+  }
+
+  /**
+   * Return an observable with game state
+   */
+  onStateChanged(): Observable<IGameState> {
+    return this.events.stateChanged$;
   }
 
   /**
