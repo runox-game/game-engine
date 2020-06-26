@@ -12,4 +12,7 @@ export enum GameEvent {
   REVERSE = "reverse",
   SKIP = "skip",
   ERROR = "error",
+  SPECIAL_CARD = "specialCard",
+  CARD_PLAYED = "cardplayed",
+  STATE_CHANGED = "stateChanged",
 }

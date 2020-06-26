@@ -25,6 +25,8 @@ export class FinalizeTurnCommand extends GameCommand {
     state.turn.setPlayerTurn(nextPlayer);
 
     this.events.dispatchBeforeTurn(new BeforeTurnEvent(nextPlayer));
+
+    state.events.dispatchStateChanged(state);
   }
 
   validate(state: IGameState) {

@@ -39,6 +39,7 @@ export class PlayCardCommand extends GameCommand {
     state.turn.player?.hand.removeCard(this.card);
 
     state.stack.addCard(this.card);
+
     state.log(
       ` ${state.turn.player?.name} juega la carta ${this.card}`,
       LogLevel.USER,
@@ -179,6 +180,12 @@ export class PlayCardCommand extends GameCommand {
     this.events.dispatchAfterPlayCard(
       new AfterPlayCardEvent(this.card, player),
     );
+
+    if (this.card.isSpecialCard()) {
+      this.events.dispatchSpecialCard(this.card);
+    } else {
+      this.events.dispatchCardPlayed(this.card);
+    }
   }
 
   validate(state: IGameState) {

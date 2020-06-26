@@ -27,6 +27,8 @@ export class RemovePlayerCommand extends GameCommand {
   execute(state: IGameState) {
     state.log(`Jugadores: ${this.player}`, LogLevel.USER);
     state.playersGroup.removePlayer(this.player);
+
+    state.events.dispatchStateChanged(state);
   }
 
   validate(state: IGameState) {
