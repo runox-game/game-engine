@@ -1,6 +1,7 @@
 import { IPlayer } from './player.model';
 
 export interface IPlayersGroup {
+  valid: boolean;
   players: IPlayer[];
 
   addPlayer(player: IPlayer): void;
@@ -15,6 +16,12 @@ export class PlayersGroup implements IPlayersGroup {
 
   constructor() {
     this.players = [];
+  }
+
+  get valid(): boolean {
+    return (
+      this.players && !!this.players.reduce((total, x) => x.valid && total, true)
+    );
   }
 
   addPlayer(player: IPlayer): void {

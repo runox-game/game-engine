@@ -7,6 +7,7 @@ export interface ICard {
   readonly sprite: string;
   readonly value: Value;
   color?: Color;
+  valid: boolean;
 
   readonly score: number;
 
@@ -32,6 +33,14 @@ export class Card implements ICard {
     this.sprite = color ? `${value}--${color}` : value;
     this.value = value;
     this.color = color;
+  }
+
+  get valid(): boolean {
+    return (
+      this.id !== undefined &&
+      this.sprite !== undefined &&
+      this.value !== undefined
+    );
   }
 
   get score(): number {

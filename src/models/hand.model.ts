@@ -3,6 +3,7 @@ import { Value } from './values.model';
 import { Color } from './color.model';
 
 export interface IHand {
+  valid: boolean;
   cards: ICard[];
 
   readonly score: number;
@@ -19,6 +20,13 @@ export class Hand implements IHand {
 
   constructor() {
     this.cards = [];
+  }
+
+  get valid(): boolean {
+    return (
+      this.cards !== undefined &&
+      !!this.cards.reduce((total, x) => x.valid && total, true)
+    );
   }
 
   get score() {

@@ -15,6 +15,7 @@ import { LogLevel } from '../log/log-levels.enum';
 import { filter } from 'rxjs/operators';
 
 export interface IGameState extends ILogger {
+  valid: boolean;
   id: number;
   readonly deck: IDeck;
   readonly stack: IStack;
@@ -98,6 +99,18 @@ export class GameState implements IGameState {
     return this.playersGroup.players[0];
   }
 
+  get valid(): boolean {
+    return (
+      this.deck !== undefined &&
+      this.gameDirection !== undefined &&
+      this.gameModes !== undefined &&
+      this.nextPlayerToPlay !== undefined &&
+      this.playersGroup !== undefined && this.playersGroup.valid &&
+      this.turn !== undefined && this.turn.valid &&
+      this.unoYellers !== undefined
+    );
+  }
+
   changeDirection() {
     const newDirection =
       this.gameDirection === GameDirection.CLOCKWISE
@@ -146,6 +159,9 @@ export class GameState implements IGameState {
   }
 
   overrideInternalState(state: IGameState) {
+    if (!state.valid) {
+      throw new Error('Invalid state');
+    }
     this.id = state.id;
 
     this.deck.cards = state.deck.cards.map((card: ICard) => {
