@@ -159,9 +159,6 @@ export class GameState implements IGameState {
   }
 
   overrideInternalState(state: IGameState) {
-    if (!state.valid) {
-      throw new Error('Invalid state');
-    }
     this.id = state.id;
 
     this.deck.cards = state.deck.cards.map((card: ICard) => {
