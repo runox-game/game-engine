@@ -126,7 +126,7 @@ export class GameEngine {
       .pipe(catchError(this.handleError()));
   }
 
-  overrideInternalState(externalState: IGameState) {
+  overrideInternalState(externalState: any) {
     this.state.overrideInternalState(externalState);
   }
 

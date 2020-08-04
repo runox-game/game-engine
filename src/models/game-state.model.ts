@@ -15,6 +15,7 @@ import { LogLevel } from '../log/log-levels.enum';
 import { filter } from 'rxjs/operators';
 
 export interface IGameState extends ILogger {
+  valid: boolean;
   id: number;
   readonly deck: IDeck;
   readonly stack: IStack;
@@ -96,6 +97,18 @@ export class GameState implements IGameState {
 
     // ya ha jugado el ultimo, entonces comienza nuevamente desde el primero
     return this.playersGroup.players[0];
+  }
+
+  get valid(): boolean {
+    return (
+      this.deck !== undefined &&
+      this.gameDirection !== undefined &&
+      this.gameModes !== undefined &&
+      this.nextPlayerToPlay !== undefined &&
+      this.playersGroup !== undefined && this.playersGroup.valid &&
+      this.turn !== undefined && this.turn.valid &&
+      this.unoYellers !== undefined
+    );
   }
 
   changeDirection() {
