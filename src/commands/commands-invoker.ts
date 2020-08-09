@@ -29,7 +29,9 @@ export class CommandsInvoker {
   invoke(currentState: IGameState) {
     const observable = new Observable<void>((subscriber) => {
       try {
-        this.commands.forEach((command) => {
+        for (let i = 0; i < this.commands.length; i++) {
+          const command = this.commands[i];
+
           currentState.log(command.toString(), LogLevel.BEFORE_VALIDATION);
           const commandValidation = command.validate(currentState);
           if (!commandValidation.isValid) {
@@ -48,7 +50,7 @@ export class CommandsInvoker {
           currentState.log(command.toString(), LogLevel.BEFORE_COMMAND);
           command.execute(currentState);
           currentState.log(command.toString(), LogLevel.BEFORE_COMMAND);
-        });
+        }
 
         subscriber.next();
         subscriber.complete();
