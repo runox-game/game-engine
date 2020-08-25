@@ -72,18 +72,14 @@ export class StartGameCommand extends GameCommand {
 
       firstStackCard = state.deck.takeCard() as ICard;
     }
-/*
-    state.stack.cards = [];
-    state.playersGroup.players.forEach((player) => {
-      player.hand.cards = [];
-    });
-*/
+
     state.stack.addCard(firstStackCard);
     state.log(` Carta en la mesa ${firstStackCard.sprite}`, LogLevel.USER);
 
     const playerTurn = state.playersGroup.players[0];
     state.log(` El primer turno es para ${playerTurn.name}`, LogLevel.USER);
 
+    state.turn.round = 0;
     state.turn.setPlayerTurn(playerTurn);
 
     this.events.dispatchAfterGameStart();
