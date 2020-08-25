@@ -3,12 +3,14 @@ import { IPlayer } from './player.model';
 export interface ITurn {
   player?: IPlayer;
   valid: boolean;
+  round: number;
 
   setPlayerTurn(player: IPlayer): void;
 }
 
 export class Turn implements ITurn {
   player: IPlayer | undefined;
+  round: number = 0;
 
   constructor() {
     this.player = undefined;
@@ -19,6 +21,9 @@ export class Turn implements ITurn {
   }
 
   setPlayerTurn(player: IPlayer) {
+    if (this.player?.id !== player.id) {
+      this.round++;
+    }
     this.player = player;
   }
 }
