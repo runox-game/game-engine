@@ -17,5 +17,6 @@ describe('Turn', () => {
 
     expect(turn.player).not.toBeUndefined();
     expect(turn.player?.id).toEqual('p1');
+    expect(turn.round).toEqual(1);
   });
 });
